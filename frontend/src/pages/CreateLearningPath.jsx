@@ -180,7 +180,7 @@ function CreateLearningPath() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white pt-20 pb-10 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white pt-20 pb-10 px-4">
       <div className="max-w-5xl mx-auto">
         {/* Back navigation */}
         <div className="mb-6">
@@ -846,7 +846,8 @@ function CreateLearningPath() {
                   Back
                 </button>
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={handleSubmit}
                   className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg shadow hover:from-purple-700 hover:to-purple-800 transition-all hover:shadow-lg flex items-center"
                   disabled={loading}
                 >

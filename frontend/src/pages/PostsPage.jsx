@@ -363,18 +363,18 @@ function PostsPage() {
   }
 
   return (
-    <div className="bg-gradient-to-b from-purple-50 to-white min-h-screen py-6 px-4 sm:px-6 lg:px-8">
+    <div className="bg-gradient-to-b from-blue-50 to-white min-h-screen py-6 px-4 sm:px-6 lg:px-8">
       {/* Header Section with decorative elements */}
       <div className="max-w-7xl mx-auto relative">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-100 rounded-full filter blur-3xl opacity-30 -z-10 transform translate-x-1/3 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-pink-100 rounded-full filter blur-3xl opacity-20 -z-10 transform -translate-x-1/3"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100 rounded-full filter blur-3xl opacity-30 -z-10 transform translate-x-1/3 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-100 rounded-full filter blur-3xl opacity-20 -z-10 transform -translate-x-1/3"></div>
 
         <div className="relative z-10">
-          <div className="bg-white bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 border border-purple-100">
+          <div className="bg-white bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 border border-blue-100">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
               <div>
-                <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-800 mb-2">
+                <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800 mb-2">
                   Community Posts
                 </h1>
                 <p className="text-gray-600 max-w-2xl">
@@ -384,7 +384,7 @@ function PostsPage() {
               {isAuthenticated && (
                 <Link 
                   to="/posts/new" 
-                  className="mt-4 sm:mt-0 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-3 rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg flex items-center group"
+                  className="mt-4 sm:mt-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg flex items-center group"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -401,8 +401,8 @@ function PostsPage() {
                   <button 
                     className={`px-5 py-2.5 rounded-lg transition-all duration-300 flex items-center ${
                       filter === "latest" 
-                        ? "bg-purple-600 text-white shadow-md" 
-                        : "bg-purple-50 hover:bg-purple-100 text-purple-700"
+                        ? "bg-blue-600 text-white shadow-md" 
+                        : "bg-blue-50 hover:bg-blue-100 text-blue-700"
                     }`}
                     onClick={() => setFilter("latest")}
                   >
@@ -414,8 +414,8 @@ function PostsPage() {
                   <button 
                     className={`px-5 py-2.5 rounded-lg transition-all duration-300 flex items-center ${
                       filter === "popular" 
-                        ? "bg-purple-600 text-white shadow-md" 
-                        : "bg-purple-50 hover:bg-purple-100 text-purple-700"
+                        ? "bg-blue-600 text-white shadow-md" 
+                        : "bg-blue-50 hover:bg-blue-100 text-blue-700"
                     }`}
                     onClick={() => setFilter("popular")}
                   >
@@ -428,8 +428,8 @@ function PostsPage() {
                     <button 
                       className={`px-5 py-2.5 rounded-lg transition-all duration-300 flex items-center ${
                         filter === "following" 
-                          ? "bg-purple-600 text-white shadow-md" 
-                          : "bg-purple-50 hover:bg-purple-100 text-purple-700"
+                          ? "bg-blue-600 text-white shadow-md" 
+                          : "bg-blue-50 hover:bg-blue-100 text-blue-700"
                       }`}
                       onClick={() => setFilter("following")}
                     >
@@ -457,7 +457,7 @@ function PostsPage() {
                   </div>
                   <button 
                     type="submit" 
-                    className="bg-purple-600 text-white px-5 py-2.5 rounded-r-lg hover:bg-purple-700 transition-colors shadow-md"
+                    className="bg-blue-600 text-white px-5 py-2.5 rounded-r-lg hover:bg-blue-700 transition-colors shadow-md"
                   >
                     Search
                   </button>
@@ -634,7 +634,7 @@ function PostsPage() {
                     
                     <Link 
                       to={`/posts/${post._id}`} 
-                      className="text-sm bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center group hover:shadow-md"
+                      className="text-sm bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center group hover:shadow-md"
                     >
                       {isAuthenticated && currentUser && post.author && 
                        (currentUser._id === post.author._id || currentUser.id === post.author._id) ? (
@@ -823,7 +823,7 @@ function PostsPage() {
               {isAuthenticated ? (
                 <Link 
                   to="/posts/new" 
-                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg"
+                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

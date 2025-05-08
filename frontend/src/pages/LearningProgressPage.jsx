@@ -328,7 +328,7 @@ function LearningProgressPage() {
     return (
       <div className="container mx-auto px-4 py-16">
         <div className="flex justify-center items-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-500"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
         </div>
       </div>
     );
@@ -444,7 +444,7 @@ function LearningProgressPage() {
                 <div className="mb-3">
                   <div className="w-full h-2 bg-gray-200 rounded-full mb-2">
                     <div 
-                      className={`h-full rounded-full ${progress.progressPercentage >= 100 ? 'bg-fuchsia-600' : 'bg-violet-600'}`}
+                      className={`h-full rounded-full ${progress.progressPercentage >= 100 ? 'bg-blue-600' : 'bg-blue-600'}`}
                       style={{ width: `${progress.progressPercentage}%` }}
                     />
                   </div>
@@ -631,92 +631,94 @@ function LearningProgressPage() {
 
   // Show overview of all learning paths (main view)
   return (
-    <div className="container mx-auto px-4 py-16">
-      {/* CSS Animations */}
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white pt-20 pb-12 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* CSS Animations */}
+        <style jsx>{`
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+          
+          @keyframes fadeOut {
+            from {
+              opacity: 1;
+            }
+            to {
+              opacity: 0;
+            }
           }
-        }
+        `}</style>
         
-        @keyframes fadeOut {
-          from {
-            opacity: 1;
-          }
-          to {
-            opacity: 0;
-          }
-        }
-      `}</style>
-      
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">My Learning Progress</h1>
-      <p className="text-gray-600 mb-8">Track your progress across different learning paths. Click on any path to view detailed milestones.</p>
-      
-      {/* Growth visualization - show at the top as a motivational banner */}
-      {userProgress.length > 0 && (
-        <div className="mb-10 bg-white rounded-xl shadow-lg p-6">
-          <div className="flex items-center">
-            <div className="mr-6">
-              {userProgress.some(p => p.progressPercentage >= 100) ? (
-                <img 
-                  src="/src/images/progress/trophy.png" 
-                  alt="Trophy" 
-                  className="w-16 h-16"
-                />
-              ) : userProgress.some(p => p.progressPercentage >= 50) ? (
-                <img 
-                  src="/src/images/progress/plant.png" 
-                  alt="Growing plant" 
-                  className="w-16 h-16"
-                />
-              ) : (
-                <img 
-                  src="/src/images/progress/leaf.png" 
-                  alt="Leaf" 
-                  className="w-16 h-16"
-                />
-              )}
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-1">
-                {userProgress.some(p => p.progressPercentage >= 100)
-                  ? "You're smashing it! 🎉"
-                  : userProgress.some(p => p.progressPercentage >= 50)
-                    ? "Making great progress! 🌱"
-                    : "You're on your way! 🍃"
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">My Learning Progress</h1>
+        <p className="text-gray-600 mb-8">Track your progress across different learning paths. Click on any path to view detailed milestones.</p>
+        
+        {/* Growth visualization - show at the top as a motivational banner */}
+        {userProgress.length > 0 && (
+          <div className="mb-10 bg-white rounded-xl shadow-lg p-6">
+            <div className="flex items-center">
+              <div className="mr-6">
+                {userProgress.some(p => p.progressPercentage >= 100) ? (
+                  <img 
+                    src="/src/images/progress/trophy.png" 
+                    alt="Trophy" 
+                    className="w-16 h-16"
+                  />
+                ) : userProgress.some(p => p.progressPercentage >= 50) ? (
+                  <img 
+                    src="/src/images/progress/plant.png" 
+                    alt="Growing plant" 
+                    className="w-16 h-16"
+                  />
+                ) : (
+                  <img 
+                    src="/src/images/progress/leaf.png" 
+                    alt="Leaf" 
+                    className="w-16 h-16"
+                  />
+                )}
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-1">
+                  {userProgress.some(p => p.progressPercentage >= 100)
+                    ? "You're smashing it! 🎉"
+                    : userProgress.some(p => p.progressPercentage >= 50)
+                      ? "Making great progress! 🌱"
+                      : "You're on your way! 🍃"
                 }
-              </h3>
-              <p className="text-gray-600">
-                {userProgress.some(p => p.progressPercentage >= 100)
-                  ? `You've completed ${userProgress.filter(p => p.progressPercentage >= 100).length} learning path${userProgress.filter(p => p.progressPercentage >= 100).length !== 1 ? 's' : ''}. Keep up the great work!`
-                  : userProgress.some(p => p.progressPercentage >= 50)
-                    ? "You're making steady progress on your learning journey. You're over halfway there!"
-                    : "You've taken the first steps on your learning journey. Keep going!"
+                </h3>
+                <p className="text-gray-600">
+                  {userProgress.some(p => p.progressPercentage >= 100)
+                    ? `You've completed ${userProgress.filter(p => p.progressPercentage >= 100).length} learning path${userProgress.filter(p => p.progressPercentage >= 100).length !== 1 ? 's' : ''}. Keep up the great work!`
+                    : userProgress.some(p => p.progressPercentage >= 50)
+                      ? "You're making steady progress on your learning journey. You're over halfway there!"
+                      : "You've taken the first steps on your learning journey. Keep going!"
                 }
-              </p>
-            </div>
-            <div className="ml-auto">
-              <Link 
-                to="/learning-paths" 
-                className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors inline-flex items-center"
-              >
-                Explore More Paths
-                <FaChevronRight className="ml-1" />
-              </Link>
+                </p>
+              </div>
+              <div className="ml-auto">
+                <Link 
+                  to="/learning-paths" 
+                  className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors inline-flex items-center"
+                >
+                  Explore More Paths
+                  <FaChevronRight className="ml-1" />
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-      
-      {/* Main content - learning path cards */}
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Your Learning Paths</h2>
-      {renderProgressOverview()}
+        )}
+        
+        {/* Main content - learning path cards */}
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Your Learning Paths</h2>
+        {renderProgressOverview()}
+      </div>
     </div>
   );
 }

@@ -71,12 +71,12 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-white px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white px-4 py-12">
       <div className="w-full max-w-md">
         {/* Card with subtle shadow and border */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-          {/* Purple gradient header */}
-          <div className="h-2 bg-gradient-to-r from-purple-500 via-purple-600 to-purple-500"></div>
+          {/* Blue gradient header */}
+          <div className="h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-600"></div>
           
           <div className="px-8 py-6">
             <div className="text-center mb-8">
@@ -127,7 +127,7 @@ function LoginPage() {
               
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white py-2.5 rounded-lg font-medium transition-colors shadow-md flex items-center justify-center"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2.5 rounded-lg font-medium transition-colors shadow-md flex items-center justify-center"
                 disabled={loading}
               >
                 {loading ? (
@@ -147,7 +147,7 @@ function LoginPage() {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Don't have an account?{' '}
-                <Link to="/register" className="text-purple-600 hover:text-purple-800 font-medium transition-colors">
+                <Link to="/register" className="text-blue-600 hover:text-blue-800 font-medium transition-colors">
                   Create an account
                 </Link>
               </p>
@@ -159,11 +159,11 @@ function LoginPage() {
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-500">
             By signing in, you agree to our{' '}
-            <Link to="/terms" className="text-purple-600 hover:underline">
+            <Link to="/terms" className="text-blue-600 hover:underline">
               Terms of Service
             </Link>{' '}
             and{' '}
-            <Link to="/privacy" className="text-purple-600 hover:underline">
+            <Link to="/privacy" className="text-blue-600 hover:underline">
               Privacy Policy
             </Link>
           </p>

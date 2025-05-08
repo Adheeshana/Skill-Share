@@ -192,7 +192,7 @@ function ProfilePage() {
   // Add a safety check for loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white pt-20 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white pt-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col items-center justify-center mt-12">
             <div className="relative w-20 h-20">
@@ -210,7 +210,7 @@ function ProfilePage() {
   // Add more detailed error display
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white pt-20 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white pt-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="rounded-xl overflow-hidden shadow-lg bg-white/90 backdrop-blur-sm border border-red-100">
             <div className="bg-red-50 border-b border-red-100 px-6 py-4">
@@ -246,7 +246,7 @@ function ProfilePage() {
   // Add a more robust check for profile data
   if (!profile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white pt-20 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white pt-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="rounded-xl overflow-hidden shadow-lg bg-white/90 backdrop-blur-sm border border-yellow-100">
             <div className="bg-yellow-50 border-b border-yellow-100 px-6 py-4">
@@ -287,14 +287,14 @@ function ProfilePage() {
   const displayBadges = profile.badges || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white pt-20 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white pt-20 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Profile Sidebar */}
           <div className="lg:col-span-4">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl relative">
               {/* Decorative top border with gradient */}
-              <div className="h-2 bg-gradient-to-r from-purple-500 via-purple-400 to-indigo-600"></div>
+              <div className="h-2 bg-gradient-to-r from-blue-500 via-blue-400 to-indigo-600"></div>
               
               {/* Profile Picture & Basic Info */}
               <div className="px-6 py-6 text-center relative">
@@ -313,7 +313,7 @@ function ProfilePage() {
                       <div className="absolute inset-0 rounded-full border-4 border-white opacity-40"></div>
                     </div>
                   ) : (
-                    <div className="relative mx-auto w-32 h-32 mb-4 rounded-full overflow-hidden bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center transform transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg">
+                    <div className="relative mx-auto w-32 h-32 mb-4 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center transform transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg">
                       <span className="text-4xl font-bold text-white">
                         {displayUsername.charAt(0).toUpperCase()}
                       </span>
@@ -336,12 +336,12 @@ function ProfilePage() {
 
                 {/* Followers/Following stats with enhanced design */}
                 <div className="grid grid-cols-2 gap-2 mt-4 text-center">
-                  <div className="px-3 py-3 rounded-lg bg-gray-50 transition-all hover:bg-purple-50 hover:shadow-sm">
-                    <h5 className="text-xl font-bold text-purple-700">{displayFollowers.length || 0}</h5>
+                  <div className="px-3 py-3 rounded-lg bg-gray-50 transition-all hover:bg-blue-50 hover:shadow-sm">
+                    <h5 className="text-xl font-bold text-blue-700">{displayFollowers.length || 0}</h5>
                     <small className="text-gray-500 font-medium">Followers</small>
                   </div>
-                  <div className="px-3 py-3 rounded-lg bg-gray-50 transition-all hover:bg-purple-50 hover:shadow-sm">
-                    <h5 className="text-xl font-bold text-purple-700">{displayFollowing.length || 0}</h5>
+                  <div className="px-3 py-3 rounded-lg bg-gray-50 transition-all hover:bg-blue-50 hover:shadow-sm">
+                    <h5 className="text-xl font-bold text-blue-700">{displayFollowing.length || 0}</h5>
                     <small className="text-gray-500 font-medium">Following</small>
                   </div>
                 </div>
@@ -351,7 +351,7 @@ function ProfilePage() {
                   {isOwnProfile ? (
                     <Link
                       to="/profile/edit"
-                      className="w-full inline-flex justify-center items-center px-4 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg shadow-md hover:from-purple-700 hover:to-purple-800 transition-all duration-300 hover:shadow-lg font-medium text-sm"
+                      className="w-full inline-flex justify-center items-center px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg shadow-md hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover:shadow-lg font-medium text-sm"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -362,8 +362,8 @@ function ProfilePage() {
                     <button 
                       className={`w-full inline-flex justify-center items-center px-4 py-2.5 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg font-medium text-sm
                       ${displayFollowers.includes(currentUser?._id || currentUser?.id)
-                        ? "bg-gray-100 text-purple-700 hover:bg-gray-200" 
-                        : "bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800"}`}
+                        ? "bg-gray-100 text-blue-700 hover:bg-gray-200" 
+                        : "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800"}`}
                     >
                       {displayFollowers.includes(currentUser?._id || currentUser?.id) ? (
                         <>
@@ -445,7 +445,7 @@ function ProfilePage() {
                   <button
                     className={`relative px-6 py-4 text-sm font-medium focus:outline-none transition-all duration-300
                     ${activeTab === "progress" 
-                      ? "text-purple-700 hover:text-purple-800" 
+                      ? "text-blue-700 hover:text-blue-800" 
                       : "text-gray-500 hover:text-gray-800"}`}
                     onClick={() => setActiveTab("progress")}
                   >
@@ -455,12 +455,12 @@ function ProfilePage() {
                       </svg>
                       Learning Progress
                     </div>
-                    {activeTab === "progress" && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 to-purple-700"></div>}
+                    {activeTab === "progress" && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-500 to-blue-700"></div>}
                   </button>
                   <button
                     className={`relative px-6 py-4 text-sm font-medium focus:outline-none transition-all duration-300
                     ${activeTab === "posts" 
-                      ? "text-purple-700 hover:text-purple-800" 
+                      ? "text-blue-700 hover:text-blue-800" 
                       : "text-gray-500 hover:text-gray-800"}`}
                     onClick={() => setActiveTab("posts")}
                   >
@@ -470,7 +470,7 @@ function ProfilePage() {
                       </svg>
                       Posts
                     </div>
-                    {activeTab === "posts" && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 to-purple-700"></div>}
+                    {activeTab === "posts" && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-500 to-blue-700"></div>}
                   </button>
                 </div>
               </div>
@@ -559,8 +559,8 @@ function ProfilePage() {
                       </div>
                     ) : (
                       <div className="py-10 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-purple-100 mb-4">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-100 mb-4">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                           </svg>
                         </div>
@@ -568,7 +568,7 @@ function ProfilePage() {
                         <p className="text-gray-500 mb-6 max-w-sm mx-auto">Start your learning journey by following a learning path</p>
                         
                         {isOwnProfile && (
-                          <Link to="/learning-paths" className="inline-flex items-center px-5 py-2.5 text-sm font-medium bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg shadow hover:from-purple-700 hover:to-purple-800 transition-all hover:shadow-lg">
+                          <Link to="/learning-paths" className="inline-flex items-center px-5 py-2.5 text-sm font-medium bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg shadow hover:from-blue-700 hover:to-blue-800 transition-all hover:shadow-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
@@ -665,7 +665,7 @@ function ProfilePage() {
                         <p className="text-gray-500 mb-6 max-w-sm mx-auto">Share your knowledge and experience with the community</p>
                         
                         {isOwnProfile && (
-                          <Link to="/posts/new" className="inline-flex items-center px-5 py-2.5 text-sm font-medium bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg shadow hover:from-purple-700 hover:to-purple-800 transition-all hover:shadow-lg">
+                          <Link to="/posts/new" className="inline-flex items-center px-5 py-2.5 text-sm font-medium bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg shadow hover:from-blue-700 hover:to-blue-800 transition-all hover:shadow-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>

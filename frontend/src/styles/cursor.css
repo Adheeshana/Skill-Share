@@ -21,7 +21,7 @@
     pointer-events: none;
     z-index: 9999;
     mix-blend-mode: difference;
-    filter: drop-shadow(0 0 8px rgba(147, 51, 234, 0.3));
+    filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.3));
 }
 
 .cursor-content {
@@ -29,7 +29,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #9333ea;
+    color: #2563eb; /* Changed from purple to blue-600 */
     transition: transform 0.2s ease;
 }
 
