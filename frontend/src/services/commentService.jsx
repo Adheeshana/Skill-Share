@@ -15,13 +15,7 @@ const validateComment = (content) => {
     errors.content = "Comment is too short (minimum 2 characters)";
   }
   
-  // Check for spam patterns
-  const spamPatterns = [
-    /buy\s+now/i,
-    /click\s+here/i,
-    /(http|https):\/\/\S+/i,  // Basic URL pattern
-    /\$\d+/,                  // Dollar amounts
-  ];
+ 
   
   for (const pattern of spamPatterns) {
     if (pattern.test(content)) {
