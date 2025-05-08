@@ -259,6 +259,7 @@ function EditPostPage() {
                       value={formData.image}
                       onChange={handleChange}
                       placeholder="https://example.com/your-image.jpg"
+                      aria-label="Enter a URL for the featured image"
                     />
                     <small className="text-muted">
                       Enter a URL for an image that represents your post (optional)
@@ -266,6 +267,7 @@ function EditPostPage() {
                     
                     {previewImage && (
                       <div className="mt-2 position-relative" style={{ maxHeight: "200px", overflow: "hidden" }}>
+                        {/* Show a loading spinner while the image is loading */}
                         {imageLoading && (
                           <div className="position-absolute top-50 start-50 translate-middle">
                             <div className="spinner-border text-primary" role="status">
@@ -275,7 +277,7 @@ function EditPostPage() {
                         )}
                         <img 
                           src={previewImage} 
-                          alt="Preview" 
+                          alt="Preview of the featured image" 
                           className="img-thumbnail" 
                           style={{ maxHeight: "200px", objectFit: "contain" }}
                           onLoad={handleImageLoad}
