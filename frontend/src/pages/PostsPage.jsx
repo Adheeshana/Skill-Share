@@ -121,11 +121,7 @@ function PostsPage() {
     }
 
     const commentText = commentTexts[postId] || "";
-    if (!commentText.trim()) {
-      alert("Comment cannot be empty");
-      return;
-    }
-
+    
     // Validate postId
     if (!postId || postId === "undefined") {
       console.error("Invalid post ID:", postId);
@@ -173,18 +169,19 @@ function PostsPage() {
       setCommentTexts((prev) => ({ ...prev, [postId]: "" }));
     } catch (err) {
       console.error("Failed to add comment:", err);
-      alert("Failed to add comment. Please try again.");
+      
+      // Display specific validation error messages
+      if (err.validationError) {
+        alert(err.message);
+      } else {
+        alert("Failed to add comment. Please try again.");
+      }
     }
   };
 
   const handleEditComment = async (commentId, postId) => {
     if (!isAuthenticated) {
       alert("You need to login to edit a comment");
-      return;
-    }
-    
-    if (!editingText.trim()) {
-      alert("Comment cannot be empty");
       return;
     }
 
@@ -201,24 +198,6 @@ function PostsPage() {
       
       console.log("Comment updated:", updatedComment);
       
-      // Update local state with the edited comment
-      /*setPosts((prevPosts) => 
-        prevPosts.map((post) => 
-          post._id === postId
-            ? {
-                ...post,
-                comments: post.comments.map((comment) =>
-                  comment._id === commentId ? {
-                    ...comment,
-                    content: editingText,
-                    updatedAt: new Date().toISOString()
-                  } : comment
-                ),
-              }
-            : post
-        )
-      );*/
-      
       // Clear editing state
       setEditingCommentId(null);
       setEditingText("");
@@ -227,7 +206,13 @@ function PostsPage() {
       
     } catch (err) {
       console.error("Failed to edit comment:", err);
-      alert("Failed to update comment. Please try again.");
+      
+      // Display specific validation error messages
+      if (err.validationError) {
+        alert(err.message);
+      } else {
+        alert("Failed to update comment. Please try again.");
+      }
       
       // Re-enable the save button on error
       const saveButton = document.querySelector(`button[data-comment-id="${commentId}"]`);
@@ -533,7 +518,7 @@ function PostsPage() {
                       <div className="flex items-center">
                         <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-gray-200 text-gray-500">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                           </svg>
                         </div>
                         <div>

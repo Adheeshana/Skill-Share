@@ -118,7 +118,13 @@ function PostDetailPage() {
       setComment("");
     } catch (err) {
       console.error("Failed to add comment:", err);
-      alert("Failed to add comment. Please try again.");
+      
+      // Display specific validation error messages
+      if (err.validationError) {
+        alert(err.message);
+      } else {
+        alert("Failed to add comment. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }
