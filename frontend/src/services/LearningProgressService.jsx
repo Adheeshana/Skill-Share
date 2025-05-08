@@ -1,0 +1,76 @@
+import api from "./api";
+
+const LearningProgressService = {
+  // Get all progress entries for a user
+  getUserProgress: (userId) => {
+    return api.get(`/progress/users/${userId}`);
+  },
+
+  // Get single progress detail by ID
+  getProgressDetail: async (progressId) => {
+    const progress = await api.get(`/progress/${progressId}`);
+    progress.data.learningPath = (await api.get(`/paths/${progress.data.learningPathId}`)).data;
+    return progress;
+  },
+
+  // Get progress for a specific user and learning path
+  getProgressByUserAndPath: (userId, pathId) => {
+    return api.get(`/progress/users/${userId}/paths/${pathId}`);
+  },
+
+  // Create new progress tracking
+  createProgress: (progressData) => {
+    return api.post("/progress", progressData);
+  },
+  
+  // Start tracking progress for a path
+  startProgress: (pathId, userId) => {
+    return api.post("/progress", {
+      learningPathId: pathId,
+      userId: userId,
+      startedAt: new Date().toISOString()
+    });
+  },
+
+  // Complete a milestone
+  completeMilestone: (progressId, milestoneId) => {
+    return api.post(`/progress/${progressId}/milestones`, {
+      milestoneId: milestoneId,
+      completedAt: new Date().toISOString()
+    });
+  },
+
+  // Uncomplete a milestone (remove from completed list)
+  uncompleteMilestone: (progressId, milestoneId) => {
+    return api.delete(`/progress/${progressId}/milestones/${milestoneId}`);
+  },
+
+  // Update notes
+  updateNotes: (progressId, notes) => {
+    return api.put(`/progress/${progressId}`, {
+      notes: notes
+    });
+  },
+
+  // Update progress percentage
+  updateProgressPercentage: (progressId) => {
+    return api.put(`/progress/${progressId}/percentage`);
+  },
+
+  // Delete progress
+  deleteProgress: (progressId) => {
+    return api.delete(`/progress/${progressId}`);
+  },
+
+  // Like a progress
+  likeProgress: (progressId) => {
+    return api.put(`/progress/${progressId}/like`);
+  },
+
+  // Get recent progress for a user
+  getRecentProgress: (userId) => {
+    return api.get(`/progress/users/${userId}/recent`);
+  }
+};
+
+export default LearningProgressService;
