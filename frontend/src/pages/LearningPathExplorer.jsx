@@ -415,9 +415,9 @@ function LearningPathExplorer() {
                     </button>
                   ))}
                 </div>
-              </div>
-              
+              </div>              
               {/* Progress filters - only for authenticated users */}
+              {/* Commented out Your Progress filters
               {isAuthenticated && (
                 <div>
                   <h3 className="text-lg font-medium text-gray-800 mb-3">Your Progress</h3>
@@ -465,6 +465,7 @@ function LearningPathExplorer() {
                   </div>
                 </div>
               )}
+              */}
               
               {/* Clear filters option */}
               {(activeTag || searchTerm || filter !== "all") && (
