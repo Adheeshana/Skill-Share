@@ -625,6 +625,7 @@ function LearningPathExplorer() {
                         View Details
                       </Link>
                       
+                      {/*}
                       {isAuthenticated && !progress && (
                         <button 
                           onClick={() => startProgress(path._id || path.id)}
@@ -633,6 +634,7 @@ function LearningPathExplorer() {
                           Start Learning
                         </button>
                       )}
+                        */}
                       
                       {isAuthenticated && progress && (
                         <Link 
