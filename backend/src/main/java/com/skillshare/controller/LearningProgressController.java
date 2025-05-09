@@ -37,7 +37,7 @@ public class LearningProgressController {
     @PostMapping
     public ResponseEntity<LearningProgress> createProgress(@Valid @RequestBody LearningProgress progress) {
         // Validate required fields
-        if (progress.getUserId() == null || progress.getUserId().isEmpty()) {
+        if (progress.getUserId() == null || progress.getUserId().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID is required");
         }
         if (progress.getLearningPathId() == null || progress.getLearningPathId().isEmpty()) {
