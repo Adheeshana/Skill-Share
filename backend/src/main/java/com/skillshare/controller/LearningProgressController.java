@@ -70,9 +70,8 @@ public class LearningProgressController {
         
         LearningProgress progress = result.get();
         return new ResponseEntity<>(progress, HttpStatus.OK);
-    }    /**
-     * Retrieves all learning progress records.
-     * @return List of all progress records with status 200 (OK)
+    }     /**
+     * Retrieves all progress records.
      */
     @GetMapping
     public ResponseEntity<List<LearningProgress>> getAllProgress() {
