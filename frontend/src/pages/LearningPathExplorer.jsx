@@ -226,7 +226,6 @@ function LearningPathExplorer() {
     if (difficulty.includes("advanced")) return "Advanced";
     return "All Levels";
   };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white flex justify-center items-center">
@@ -236,8 +235,9 @@ function LearningPathExplorer() {
             <div className="absolute inset-0 flex items-center justify-center">
               <FaSeedling className="text-purple-600 animate-pulse h-6 w-6" />
             </div>
+            <div className="absolute -inset-2 border-2 border-purple-100 rounded-full opacity-50 animate-ping"></div>
           </div>
-          <p className="text-purple-600 mt-4 font-medium">Loading learning paths...</p>
+          <p className="text-purple-600 mt-4 font-medium bg-white px-4 py-1 rounded-full shadow-sm">Loading learning paths...</p>
         </div>
       </div>
     );
@@ -263,14 +263,19 @@ function LearningPathExplorer() {
         />
         
         <div className="container mx-auto px-4 py-10 relative z-10">
-          <div className="text-center max-w-4xl mx-auto mb-8">
-            <motion.h1 
-              className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-900"
+          <div className="text-center max-w-4xl mx-auto mb-8">            <motion.h1 
+              className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-900 relative"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
               Discover Learning Paths
+              <motion.span 
+                className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-purple-400 h-1 rounded-full"
+                initial={{ width: "0%" }}
+                animate={{ width: "40%" }}
+                transition={{ delay: 0.6, duration: 0.8 }}
+              />
             </motion.h1>
             <motion.p 
               className="text-xl text-gray-600 mb-8"
@@ -298,12 +303,11 @@ function LearningPathExplorer() {
                   placeholder="Search for skills, subjects, or technologies..."
                   className="w-full pl-6 pr-14 py-4 rounded-full shadow-lg focus:ring-2 focus:ring-purple-500 focus:outline-none border border-purple-100 text-gray-700"
                   aria-label="Search learning paths"
-                />
-                <button
+                />                <button
                   type="submit"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-600 to-purple-700 text-white p-3 rounded-full shadow-md hover:shadow-lg transition-all"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-600 to-purple-700 text-white p-3 rounded-full shadow-md hover:shadow-lg transition-all flex items-center justify-center w-10 h-10 hover:from-purple-700 hover:to-purple-800"
                 >
-                  <FaSearch />
+                  <FaSearch className="text-lg" />
                 </button>
               </form>
             </motion.div>
@@ -328,11 +332,11 @@ function LearningPathExplorer() {
               ))}
             </motion.div>
           </div>
-          
-          <div className="flex justify-center">
+            <div className="flex justify-center">
             <motion.button
-              className="flex items-center text-purple-600 font-medium"
+              className="flex items-center text-purple-600 font-medium bg-white/80 backdrop-blur px-4 py-2 rounded-full shadow-sm hover:shadow hover:bg-white transition-all"
               animate={{ y: [0, 5, 0] }}
+              whileHover={{ scale: 1.05 }}
               transition={{ 
                 duration: 1.5,
                 repeat: Infinity,
@@ -344,7 +348,7 @@ function LearningPathExplorer() {
               }}
             >
               <span className="mr-2">Explore All Paths</span>
-              <FaArrowDown />
+              <FaArrowDown className="animate-bounce" />
             </motion.button>
           </div>
         </div>
@@ -476,8 +480,12 @@ function LearningPathExplorer() {
                       setActiveTag("");
                       setFilter("all");
                     }}
-                    className="text-sm text-purple-600 hover:text-purple-800 flex items-center underline"
+                    className="text-sm text-purple-600 hover:text-purple-800 flex items-center bg-purple-50 hover:bg-purple-100 transition-all px-3 py-1 rounded-md"
                   >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                     Clear All Filters
                   </button>
                 </div>
@@ -636,10 +644,9 @@ function LearningPathExplorer() {
                         </div>
                       </div>
                     )}
-                      <div className="flex gap-2 mt-auto">
-                      <Link 
+                      <div className="flex gap-2 mt-auto">                      <Link 
                         to={`/learning-paths/${path._id || path.id}`}
-                        className="flex-1 bg-gradient-to-r from-indigo-50 to-purple-100 border border-purple-300 text-purple-700 px-4 py-2.5 rounded-lg text-center hover:bg-purple-200 transition-colors flex items-center justify-center font-medium shadow-sm hover:shadow"
+                        className="flex-1 bg-gradient-to-r from-indigo-50 to-purple-100 border border-purple-300 text-purple-700 px-4 py-2.5 rounded-lg text-center hover:bg-purple-200 transition-all duration-300 flex items-center justify-center font-medium shadow-sm hover:shadow-md hover:scale-[1.02]"
                       >
                         <FaBook className="mr-2" /> View Details
                       </Link>
@@ -683,15 +690,19 @@ function LearningPathExplorer() {
                     ? "No learning paths match your current filter"
                     : "Try adjusting your search criteria or explore our featured paths"
                   }
-                </p>
-                <button                  onClick={() => {
+                </p>                <button onClick={() => {
                     setSearchTerm("");
                     setDebouncedSearchTerm(""); // Also clear the debounced term
                     setActiveTag("");
                     setFilter("all");
                   }}
-                  className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-purple-800 transition-colors shadow-sm"
+                  className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-300 shadow-sm hover:shadow-md flex items-center mx-auto"
                 >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                    <polyline points="1 4 1 10 7 10"></polyline>
+                    <polyline points="23 20 23 14 17 14"></polyline>
+                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                  </svg>
                   Reset Filters
                 </button>
               </div>
