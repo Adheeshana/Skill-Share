@@ -121,11 +121,7 @@ function PostsPage() {
     }
 
     const commentText = commentTexts[postId] || "";
-    if (!commentText.trim()) {
-      alert("Comment cannot be empty");
-      return;
-    }
-
+    
     // Validate postId
     if (!postId || postId === "undefined") {
       console.error("Invalid post ID:", postId);
@@ -173,18 +169,19 @@ function PostsPage() {
       setCommentTexts((prev) => ({ ...prev, [postId]: "" }));
     } catch (err) {
       console.error("Failed to add comment:", err);
-      alert("Failed to add comment. Please try again.");
+      
+      // Display specific validation error messages
+      if (err.validationError) {
+        alert(err.message);
+      } else {
+        alert("Failed to add comment. Please try again.");
+      }
     }
   };
 
   const handleEditComment = async (commentId, postId) => {
     if (!isAuthenticated) {
       alert("You need to login to edit a comment");
-      return;
-    }
-    
-    if (!editingText.trim()) {
-      alert("Comment cannot be empty");
       return;
     }
 
@@ -201,24 +198,6 @@ function PostsPage() {
       
       console.log("Comment updated:", updatedComment);
       
-      // Update local state with the edited comment
-      /*setPosts((prevPosts) => 
-        prevPosts.map((post) => 
-          post._id === postId
-            ? {
-                ...post,
-                comments: post.comments.map((comment) =>
-                  comment._id === commentId ? {
-                    ...comment,
-                    content: editingText,
-                    updatedAt: new Date().toISOString()
-                  } : comment
-                ),
-              }
-            : post
-        )
-      );*/
-      
       // Clear editing state
       setEditingCommentId(null);
       setEditingText("");
@@ -227,7 +206,13 @@ function PostsPage() {
       
     } catch (err) {
       console.error("Failed to edit comment:", err);
-      alert("Failed to update comment. Please try again.");
+      
+      // Display specific validation error messages
+      if (err.validationError) {
+        alert(err.message);
+      } else {
+        alert("Failed to update comment. Please try again.");
+      }
       
       // Re-enable the save button on error
       const saveButton = document.querySelector(`button[data-comment-id="${commentId}"]`);
@@ -363,18 +348,18 @@ function PostsPage() {
   }
 
   return (
-    <div className="bg-gradient-to-b from-purple-50 to-white min-h-screen py-6 px-4 sm:px-6 lg:px-8">
+    <div className="bg-gradient-to-b from-blue-50 to-white min-h-screen py-6 px-4 sm:px-6 lg:px-8">
       {/* Header Section with decorative elements */}
       <div className="max-w-7xl mx-auto relative">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-100 rounded-full filter blur-3xl opacity-30 -z-10 transform translate-x-1/3 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-pink-100 rounded-full filter blur-3xl opacity-20 -z-10 transform -translate-x-1/3"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100 rounded-full filter blur-3xl opacity-30 -z-10 transform translate-x-1/3 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-100 rounded-full filter blur-3xl opacity-20 -z-10 transform -translate-x-1/3"></div>
 
         <div className="relative z-10">
-          <div className="bg-white bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 border border-purple-100">
+          <div className="bg-white bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 border border-blue-100">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
               <div>
-                <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-800 mb-2">
+                <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800 mb-2">
                   Community Posts
                 </h1>
                 <p className="text-gray-600 max-w-2xl">
@@ -384,7 +369,7 @@ function PostsPage() {
               {isAuthenticated && (
                 <Link 
                   to="/posts/new" 
-                  className="mt-4 sm:mt-0 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-3 rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg flex items-center group"
+                  className="mt-4 sm:mt-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg flex items-center group"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -401,8 +386,8 @@ function PostsPage() {
                   <button 
                     className={`px-5 py-2.5 rounded-lg transition-all duration-300 flex items-center ${
                       filter === "latest" 
-                        ? "bg-purple-600 text-white shadow-md" 
-                        : "bg-purple-50 hover:bg-purple-100 text-purple-700"
+                        ? "bg-blue-600 text-white shadow-md" 
+                        : "bg-blue-50 hover:bg-blue-100 text-blue-700"
                     }`}
                     onClick={() => setFilter("latest")}
                   >
@@ -414,8 +399,8 @@ function PostsPage() {
                   <button 
                     className={`px-5 py-2.5 rounded-lg transition-all duration-300 flex items-center ${
                       filter === "popular" 
-                        ? "bg-purple-600 text-white shadow-md" 
-                        : "bg-purple-50 hover:bg-purple-100 text-purple-700"
+                        ? "bg-blue-600 text-white shadow-md" 
+                        : "bg-blue-50 hover:bg-blue-100 text-blue-700"
                     }`}
                     onClick={() => setFilter("popular")}
                   >
@@ -428,8 +413,8 @@ function PostsPage() {
                     <button 
                       className={`px-5 py-2.5 rounded-lg transition-all duration-300 flex items-center ${
                         filter === "following" 
-                          ? "bg-purple-600 text-white shadow-md" 
-                          : "bg-purple-50 hover:bg-purple-100 text-purple-700"
+                          ? "bg-blue-600 text-white shadow-md" 
+                          : "bg-blue-50 hover:bg-blue-100 text-blue-700"
                       }`}
                       onClick={() => setFilter("following")}
                     >
@@ -457,7 +442,7 @@ function PostsPage() {
                   </div>
                   <button 
                     type="submit" 
-                    className="bg-purple-600 text-white px-5 py-2.5 rounded-r-lg hover:bg-purple-700 transition-colors shadow-md"
+                    className="bg-blue-600 text-white px-5 py-2.5 rounded-r-lg hover:bg-blue-700 transition-colors shadow-md"
                   >
                     Search
                   </button>
@@ -485,7 +470,45 @@ function PostsPage() {
             {posts.map((post, index) => (
               <div key={post._id || `post-${index}`} className="group bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border border-purple-50">
                 {/* Post Image */}
-                {post.image && (
+                {post.mediaUrls && post.mediaUrls.length > 0 ? (
+                  <div className="relative h-52 w-full overflow-hidden">
+                    <img 
+                      src={post.mediaUrls[0]} 
+                      alt={post.title} 
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" 
+                    />
+                    {post.mediaUrls.length > 1 && (
+                      <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                        +{post.mediaUrls.length - 1} more
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                ) : post.mediaItems && post.mediaItems.length > 0 ? (
+                  <div className="relative h-52 w-full overflow-hidden">
+                    {post.mediaItems[0].type === 'image' ? (
+                      <img 
+                        src={post.mediaItems[0].url || post.mediaItems[0].preview} 
+                        alt={post.title} 
+                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" 
+                      />
+                    ) : post.mediaItems[0].type === 'video' ? (
+                      <video 
+                        src={post.mediaItems[0].url || post.mediaItems[0].preview}
+                        className="w-full h-full object-cover"
+                        muted
+                        loop
+                        autoPlay
+                      />
+                    ) : null}
+                    {post.mediaItems.length > 1 && (
+                      <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                        +{post.mediaItems.length - 1} more
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                ) : post.image ? (
                   <div className="relative h-52 w-full overflow-hidden">
                     <img 
                       src={post.image} 
@@ -494,7 +517,7 @@ function PostsPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                )}
+                ) : null}
                 
                 {/* Post Content */}
                 <div className="p-6">
@@ -533,7 +556,7 @@ function PostsPage() {
                       <div className="flex items-center">
                         <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-gray-200 text-gray-500">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                           </svg>
                         </div>
                         <div>
@@ -634,7 +657,7 @@ function PostsPage() {
                     
                     <Link 
                       to={`/posts/${post._id}`} 
-                      className="text-sm bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center group hover:shadow-md"
+                      className="text-sm bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center group hover:shadow-md"
                     >
                       {isAuthenticated && currentUser && post.author && 
                        (currentUser._id === post.author._id || currentUser.id === post.author._id) ? (
@@ -823,7 +846,7 @@ function PostsPage() {
               {isAuthenticated ? (
                 <Link 
                   to="/posts/new" 
-                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg"
+                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

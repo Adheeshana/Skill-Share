@@ -43,12 +43,12 @@ function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-white px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white px-4 py-12">
       <div className="w-full max-w-md">
         {/* Card with subtle shadow and border */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-          {/* Purple gradient header */}
-          <div className="h-2 bg-gradient-to-r from-purple-500 via-purple-600 to-purple-500"></div>
+          {/* Blue gradient header */}
+          <div className="h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-600"></div>
           
           <div className="px-8 py-6">
             <div className="text-center mb-6">
@@ -75,7 +75,7 @@ function RegisterPage() {
                   type="text"
                   id="username"
                   name="username"
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all text-gray-800"
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-800"
                   placeholder="Choose a username"
                   value={formData.username}
                   onChange={handleChange}
@@ -91,7 +91,7 @@ function RegisterPage() {
                   type="email"
                   id="email"
                   name="email"
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all text-gray-800"
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-800"
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleChange}
@@ -107,7 +107,7 @@ function RegisterPage() {
                   type="password"
                   id="password"
                   name="password"
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all text-gray-800"
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-800"
                   placeholder="Create a password"
                   value={formData.password}
                   onChange={handleChange}
@@ -123,7 +123,7 @@ function RegisterPage() {
                   type="password"
                   id="confirmPassword"
                   name="confirmPassword"
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all text-gray-800"
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-800"
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
@@ -133,7 +133,7 @@ function RegisterPage() {
               
               <button
                 type="submit"
-                className="w-full mt-2 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white py-2.5 rounded-lg font-medium transition-colors shadow-md flex items-center justify-center"
+                className="w-full mt-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2.5 rounded-lg font-medium transition-colors shadow-md flex items-center justify-center"
                 disabled={loading}
               >
                 {loading ? (
@@ -153,7 +153,7 @@ function RegisterPage() {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Already have an account?{' '}
-                <Link to="/login" className="text-purple-600 hover:text-purple-800 font-medium transition-colors">
+                <Link to="/login" className="text-blue-600 hover:text-blue-800 font-medium transition-colors">
                   Sign in
                 </Link>
               </p>
@@ -165,11 +165,11 @@ function RegisterPage() {
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-500">
             By creating an account, you agree to our{' '}
-            <Link to="/terms" className="text-purple-600 hover:underline">
+            <Link to="/terms" className="text-blue-600 hover:underline">
               Terms of Service
             </Link>{' '}
             and{' '}
-            <Link to="/privacy" className="text-purple-600 hover:underline">
+            <Link to="/privacy" className="text-blue-600 hover:underline">
               Privacy Policy
             </Link>
           </p>
