@@ -684,15 +684,15 @@ function CreateLearningPath() {
                         <label className="block text-gray-700 text-sm font-medium mb-2 flex items-center">
                           <FaLink className="mr-1 text-blue-500" /> Resources (optional)
                         </label>
-                        <div className="mb-2 space-y-2">
-                          {milestone.resources && milestone.resources.length > 0 ? (
+                        <div className="mb-2 space-y-2">                          {milestone.resources && milestone.resources.length > 0 ? (
                             milestone.resources.map((resource, resourceIndex) => (
-                              <div key={resourceIndex} className="flex items-center">
-                                <span className="flex-grow bg-gray-50 px-3 py-2 border border-gray-300 rounded-lg text-sm">{resource}</span>
+                              <div key={resourceIndex} className="flex items-center group hover:bg-gray-50 p-1 rounded-lg transition-all">
+                                <FaLink className="text-blue-500 mr-2 opacity-70" />
+                                <span className="flex-grow text-sm">{resource}</span>
                                 <button
                                   type="button"
                                   onClick={() => handleRemoveResource(index, resourceIndex)}
-                                  className="ml-2 p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
+                                  className="ml-2 p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors opacity-0 group-hover:opacity-100"
                                   aria-label="Remove resource"
                                 >
                                   <FaTimes />
@@ -700,7 +700,9 @@ function CreateLearningPath() {
                               </div>
                             ))
                           ) : (
-                            <div className="text-sm text-gray-400 italic">No resources added yet</div>
+                            <div className="text-sm text-gray-400 italic flex items-center">
+                              <FaLink className="mr-2 opacity-50" /> No resources added yet
+                            </div>
                           )}
                         </div>
                         <div className="flex">
