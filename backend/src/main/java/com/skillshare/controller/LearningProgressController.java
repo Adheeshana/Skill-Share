@@ -157,9 +157,7 @@ public class LearningProgressController {
         progress.setId(id);
         return new ResponseEntity<>(learningProgressService.updateProgress(progress), HttpStatus.OK);
     }    /**
-     * Deletes a learning progress record.
-     * @param id The ID of the progress to delete
-     * @return Empty response with status 204 (No Content) or 404 (Not Found)
+     * Deletes a progress record.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProgress(@PathVariable String id) {
@@ -177,11 +175,8 @@ public class LearningProgressController {
         
         learningProgressService.deleteProgress(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }    /**
-     * Marks a milestone as completed in a learning progress record.
-     * @param id The ID of the progress to update
-     * @param milestone The milestone to mark as completed
-     * @return Empty response with status 200 (OK)
+    }   /**
+     * Marks a milestone as completed.
      */
     @PostMapping("/{id}/milestones")
     public ResponseEntity<Void> completeMilestone(
