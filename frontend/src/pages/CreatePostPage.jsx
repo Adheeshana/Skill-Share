@@ -167,6 +167,13 @@ function CreatePostPage() {
       return;
     }
 
+    // Word count validation
+    const wordCount = formData.content.trim().split(/\s+/).length;
+    if (wordCount < 50) {
+      setError(`Content must be at least 50 words. Current word count: ${wordCount}`);
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       
@@ -240,7 +247,7 @@ function CreatePostPage() {
                 </div>
                 
                 <div className="mb-3">
-                  <label htmlFor="content" className="form-label">Content *</label>
+                  <label htmlFor="content" className="form-label">Content * <span className="text-muted">(minimum 50 words)</span></label>
                   <textarea
                     className="form-control"
                     id="content"
@@ -250,9 +257,14 @@ function CreatePostPage() {
                     onChange={handleChange}
                     required
                   ></textarea>
-                  <small className="text-muted">
-                    Share your knowledge, experiences, or questions with the community.
-                  </small>
+                  <div className="d-flex justify-content-between align-items-center mt-1">
+                    <small className="text-muted">
+                      Share your knowledge, experiences, or questions with the community.
+                    </small>
+                    <small className={`${formData.content.trim().split(/\s+/).length >= 50 ? 'text-success' : 'text-muted'}`}>
+                      Word count: {formData.content.trim() ? formData.content.trim().split(/\s+/).length : 0}/50
+                    </small>
+                  </div>
                 </div>
                 
                 {/* Media Upload Section */}

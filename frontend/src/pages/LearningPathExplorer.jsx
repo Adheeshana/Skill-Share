@@ -41,10 +41,24 @@ function LearningPathExplorer() {
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [activeTag, setActiveTag] = useState("");
   const [tags, setTags] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const { currentUser, isAuthenticated } = useAuth();
+  // Add debounce for search term with improved implementation
+  useEffect(() => {
+    // Create a timer that only updates the debounced search term after the user stops typing
+    // This prevents refreshing results on every keystroke (including deletions)
+    const timer = setTimeout(() => {
+      // Only update when searchTerm has changed
+      if (debouncedSearchTerm !== searchTerm) {
+        setDebouncedSearchTerm(searchTerm);
+      }
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timer);
+  }, [searchTerm, debouncedSearchTerm]);
   
   const categories = [
     { id: 'development', name: 'Development', icon: <FaLaptop className="text-blue-500" /> },
@@ -52,17 +66,17 @@ function LearningPathExplorer() {
     { id: 'business', name: 'Business', icon: <FaBook className="text-green-500" /> },
     { id: 'tech', name: 'Technology', icon: <FaBrain className="text-purple-500" /> },
   ];
-
   useEffect(() => {
     const fetchPaths = async () => {
       try {
         setLoading(true);
-        
         let response;
         if (activeTag) {
           response = await LearningPathService.getPathsByTag(activeTag);
-        } else if (searchTerm) {
-          response = await LearningPathService.searchPaths(searchTerm);
+        } else if (debouncedSearchTerm && debouncedSearchTerm.trim() !== '') {
+          // Use the debounced search term to prevent API calls on every keystroke
+          // Only search if there's actual content to search for
+          response = await LearningPathService.searchPaths(debouncedSearchTerm);
         } else {
           response = await LearningPathService.getAllPaths();
         }
@@ -102,7 +116,7 @@ function LearningPathExplorer() {
     };
 
     fetchPaths();
-  }, [currentUser, isAuthenticated, searchTerm, activeTag]);
+  }, [currentUser, isAuthenticated, debouncedSearchTerm, activeTag]);
 
   const startProgress = async (pathId) => {
     try {
@@ -187,16 +201,18 @@ function LearningPathExplorer() {
       // Then check for matching IDs
       return (p.learningPath._id || p.learningPath.id) === pathId;
     });
-  };
-
-  const handleSearch = (e) => {
+  };  const handleSearch = (e) => {
     e.preventDefault();
-    // Search term will trigger useEffect
+    // When the form is submitted, we immediately set the debouncedSearchTerm
+    // This bypasses the delay when the user explicitly clicks search
+    if (searchTerm !== debouncedSearchTerm) {
+      setDebouncedSearchTerm(searchTerm);
+    }
   };
-
   const handleTagClick = (tag) => {
     setActiveTag(activeTag === tag ? "" : tag);
     setSearchTerm("");
+    setDebouncedSearchTerm(""); // Also reset the debounced search term
   };
 
   const getPathLevel = (path) => {
@@ -272,13 +288,16 @@ function LearningPathExplorer() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <form onSubmit={handleSearch} className="relative">
-                <input
+              <form onSubmit={handleSearch} className="relative">                <input
                   type="text"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    // Update the search term without immediately triggering API calls
+                    setSearchTerm(e.target.value);
+                  }}
                   placeholder="Search for skills, subjects, or technologies..."
                   className="w-full pl-6 pr-14 py-4 rounded-full shadow-lg focus:ring-2 focus:ring-purple-500 focus:outline-none border border-purple-100 text-gray-700"
+                  aria-label="Search learning paths"
                 />
                 <button
                   type="submit"
@@ -397,62 +416,16 @@ function LearningPathExplorer() {
                   ))}
                 </div>
               </div>
+              {/*
+             
               
-              {/* Progress filters - only for authenticated users */}
-              {isAuthenticated && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-800 mb-3">Your Progress</h3>
-                  <div className="flex flex-wrap gap-2">
-                    <button 
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                        filter === "all" 
-                          ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-sm" 
-                          : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
-                      }`}
-                      onClick={() => setFilter("all")}
-                    >
-                      All Paths
-                    </button>
-                    <button 
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
-                        filter === "started" 
-                          ? "bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-sm" 
-                          : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
-                      }`}
-                      onClick={() => setFilter("started")}
-                    >
-                      <FaHourglassHalf className="mr-2" /> In Progress
-                    </button>
-                    <button 
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
-                        filter === "completed" 
-                          ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-sm" 
-                          : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
-                      }`}
-                      onClick={() => setFilter("completed")}
-                    >
-                      <FaCheckCircle className="mr-2" /> Completed
-                    </button>
-                    <button 
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                        filter === "not-started" 
-                          ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-sm" 
-                          : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
-                      }`}
-                      onClick={() => setFilter("not-started")}
-                    >
-                      Not Started
-                    </button>
-                  </div>
-                </div>
-              )}
               
               {/* Clear filters option */}
               {(activeTag || searchTerm || filter !== "all") && (
-                <div className="flex justify-end">
-                  <button 
+                <div className="flex justify-end">                  <button 
                     onClick={() => {
                       setSearchTerm("");
+                      setDebouncedSearchTerm(""); // Also clear the debounced term to prevent unnecessary API calls
                       setActiveTag("");
                       setFilter("all");
                     }}
@@ -616,15 +589,15 @@ function LearningPathExplorer() {
                         </div>
                       </div>
                     )}
-                    
-                    <div className="flex gap-2 mt-auto">
+                      <div className="flex gap-2 mt-auto">
                       <Link 
                         to={`/learning-paths/${path._id || path.id}`}
-                        className="flex-1 bg-white border border-purple-500 text-purple-700 px-4 py-2.5 rounded-lg text-center hover:bg-purple-50 transition-colors flex items-center justify-center"
+                        className="flex-1 bg-gradient-to-r from-indigo-50 to-purple-100 border border-purple-300 text-purple-700 px-4 py-2.5 rounded-lg text-center hover:bg-purple-200 transition-colors flex items-center justify-center font-medium shadow-sm hover:shadow"
                       >
-                        View Details
+                        <FaBook className="mr-2" /> View Details
                       </Link>
                       
+                      {/*}
                       {isAuthenticated && !progress && (
                         <button 
                           onClick={() => startProgress(path._id || path.id)}
@@ -633,6 +606,7 @@ function LearningPathExplorer() {
                           Start Learning
                         </button>
                       )}
+                        */}
                       
                       {isAuthenticated && progress && (
                         <Link 
@@ -663,9 +637,9 @@ function LearningPathExplorer() {
                     : "Try adjusting your search criteria or explore our featured paths"
                   }
                 </p>
-                <button 
-                  onClick={() => {
+                <button                  onClick={() => {
                     setSearchTerm("");
+                    setDebouncedSearchTerm(""); // Also clear the debounced term
                     setActiveTag("");
                     setFilter("all");
                   }}

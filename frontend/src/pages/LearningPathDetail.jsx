@@ -168,11 +168,11 @@ function LearningPathDetail() {
               </span>
             ))}
             <span className="bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full">
-              {path.difficulty || "Beginner"}
+              {path.difficulty ? path.difficulty : "Beginner"}
             </span>
             <span className="bg-purple-100 text-purple-800 text-sm px-3 py-1 rounded-full flex items-center">
               <FaClock className="mr-1" />
-              {path.duration || "30"} days
+              {path.duration ? path.duration : "30"} days
             </span>
           </div>
           

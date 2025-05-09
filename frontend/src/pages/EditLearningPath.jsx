@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FaGraduationCap, FaPlus, FaTimes, FaArrowLeft } from 'react-icons/fa';
+import { FaGraduationCap, FaPlus, FaTimes, FaArrowLeft, FaLink } from 'react-icons/fa';
 import LearningPathService from '../services/LearningPathService';
 import { useAuth } from '../utils/AuthContext';
 
@@ -11,6 +11,8 @@ function EditLearningPath() {
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [error, setError] = useState('');
+  const [titleError, setTitleError] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
   
   // Form state
   const [title, setTitle] = useState('');
@@ -24,6 +26,35 @@ function EditLearningPath() {
   const [milestones, setMilestones] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
   const [userId, setUserId] = useState('');
+  
+  // Validation function to check if string contains only numbers
+  const isNumericOnly = (text) => {
+    return /^\d+$/.test(text.trim());
+  };
+
+  // Handle title change with validation
+  const handleTitleChange = (e) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+    
+    if (newTitle.trim() && isNumericOnly(newTitle)) {
+      setTitleError('Title cannot contain only numbers');
+    } else {
+      setTitleError('');
+    }
+  };
+
+  // Handle description change with validation
+  const handleDescriptionChange = (e) => {
+    const newDescription = e.target.value;
+    setDescription(newDescription);
+    
+    if (newDescription.trim() && isNumericOnly(newDescription)) {
+      setDescriptionError('Description cannot contain only numbers');
+    } else {
+      setDescriptionError('');
+    }
+  };
 
   // Fetch the learning path data when component mounts
   useEffect(() => {
@@ -121,7 +152,6 @@ function EditLearningPath() {
     updatedMilestones[index][field] = value;
     setMilestones(updatedMilestones);
   };
-
   // Handle adding a resource to a milestone
   const handleAddResource = (index, resource) => {
     if (resource.trim()) {
@@ -153,6 +183,19 @@ function EditLearningPath() {
       return;
     }
     
+    // Check if title or description contains only numbers
+    if (isNumericOnly(title)) {
+      setTitleError('Title cannot contain only numbers');
+      setError('Please correct the errors before submitting');
+      return;
+    }
+    
+    if (isNumericOnly(description)) {
+      setDescriptionError('Description cannot contain only numbers');
+      setError('Please correct the errors before submitting');
+      return;
+    }
+    
     if (milestones.some(m => !m.title.trim() || !m.description.trim())) {
       setError('All milestones must have a title and description');
       return;
@@ -161,8 +204,7 @@ function EditLearningPath() {
     try {
       setLoading(true);
       setError('');
-      
-      const learningPathData = {
+        const learningPathData = {
         title,
         description,
         requirements,
@@ -170,7 +212,7 @@ function EditLearningPath() {
         duration: parseInt(duration),
         tags,
         milestones,
-        isPublic,
+        isPublic: true, // Always set to public
         tips,
         userId, // Keep the original userId
       };
@@ -252,11 +294,14 @@ function EditLearningPath() {
             <input
               type="text"
               id="title"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400"
+              className={`w-full px-4 py-2 border ${titleError ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400`}
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={handleTitleChange}
               required
             />
+            {titleError && (
+              <p className="mt-1 text-sm text-red-500">{titleError}</p>
+            )}
           </div>
           
           <div className="mb-6">
@@ -265,11 +310,14 @@ function EditLearningPath() {
             </label>
             <textarea
               id="description"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 h-32"
+              className={`w-full px-4 py-2 border ${descriptionError ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 h-32`}
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={handleDescriptionChange}
               required
             ></textarea>
+            {descriptionError && (
+              <p className="mt-1 text-sm text-red-500">{descriptionError}</p>
+            )}
           </div>
           
           <div className="mb-6">
@@ -448,36 +496,43 @@ function EditLearningPath() {
                       min="1"
                     />
                   </div>
-                  
-                  <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-2">
-                      Resources (optional)
+                    <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-2 flex items-center">
+                      <FaLink className="mr-1 text-blue-500" /> Resources (optional)
                     </label>
-                    <div className="mb-2">
-                      {milestone.resources && milestone.resources.map((resource, resourceIndex) => (
-                        <div key={resourceIndex} className="flex items-center mb-2">
-                          <span className="flex-grow bg-white px-3 py-2 border border-gray-300 rounded-lg">{resource}</span>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveResource(index, resourceIndex)}
-                            className="ml-2 text-red-600 hover:text-red-800"
-                          >
-                            <FaTimes />
-                          </button>
+                    <div className="mb-2 space-y-2">
+                      {milestone.resources && milestone.resources.length > 0 ? (
+                        milestone.resources.map((resource, resourceIndex) => (
+                          <div key={resourceIndex} className="flex items-center group hover:bg-gray-50 p-1 rounded-lg transition-all">
+                            <FaLink className="text-blue-500 mr-2 opacity-70" />
+                            <span className="flex-grow text-sm">{resource}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveResource(index, resourceIndex)}
+                              className="ml-2 p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors opacity-0 group-hover:opacity-100"
+                              aria-label="Remove resource"
+                            >
+                              <FaTimes />
+                            </button>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-sm text-gray-400 italic flex items-center">
+                          <FaLink className="mr-2 opacity-50" /> No resources added yet
                         </div>
-                      ))}
+                      )}
                     </div>
                     <div className="flex">
                       <input
                         type="text"
                         id={`resource-input-${index}`}
-                        className="flex-grow px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400"
-                        placeholder="Add a resource link or description..."
+                        className="flex-grow px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all"
+                        placeholder="Add a book, article, video or URL..."
                         onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddResource(index, e.target.value))}
                       />
                       <button
                         type="button"
-                        className="bg-purple-600 text-white px-3 py-2 rounded-r-lg hover:bg-purple-700 transition-colors"
+                        className="bg-blue-600 text-white px-3 py-2 rounded-r-lg hover:bg-blue-700 transition-colors"
                         onClick={() => handleAddResource(index, document.getElementById(`resource-input-${index}`).value)}
                       >
                         Add
@@ -488,18 +543,7 @@ function EditLearningPath() {
               ))}
             </div>
           </div>
-          
-          <div className="mb-8">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                className="form-checkbox h-5 w-5 text-purple-600"
-                checked={isPublic}
-                onChange={(e) => setIsPublic(e.target.checked)}
-              />
-              <span className="ml-2 text-gray-700">Make this learning path public</span>
-            </label>
-          </div>
+            {/* Public/Private toggle removed - always public */}
           
           <div className="flex justify-end space-x-4">
             <button
