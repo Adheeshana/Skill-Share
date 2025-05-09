@@ -847,12 +847,10 @@ function CreateLearningPath() {
                 </button>
                 <button
 
-                  type="button"
+                  type="submit"
                   onClick={handleSubmit}
                   className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg shadow hover:from-purple-700 hover:to-purple-800 transition-all hover:shadow-lg flex items-center"
                   disabled={loading}
-                  type="submit"
-                  className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg shadow hover:from-purple-700 hover:to-purple-800 transition-all flex items-center"
 
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
