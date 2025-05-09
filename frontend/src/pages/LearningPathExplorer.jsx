@@ -616,13 +616,12 @@ function LearningPathExplorer() {
                         </div>
                       </div>
                     )}
-                    
-                    <div className="flex gap-2 mt-auto">
+                      <div className="flex gap-2 mt-auto">
                       <Link 
                         to={`/learning-paths/${path._id || path.id}`}
-                        className="flex-1 bg-white border border-purple-500 text-purple-700 px-4 py-2.5 rounded-lg text-center hover:bg-purple-50 transition-colors flex items-center justify-center"
+                        className="flex-1 bg-gradient-to-r from-indigo-50 to-purple-100 border border-purple-300 text-purple-700 px-4 py-2.5 rounded-lg text-center hover:bg-purple-200 transition-colors flex items-center justify-center font-medium shadow-sm hover:shadow"
                       >
-                        View Details
+                        <FaBook className="mr-2" /> View Details
                       </Link>
                       
                       {/*}
