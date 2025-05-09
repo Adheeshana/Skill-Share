@@ -205,8 +205,7 @@ function EditLearningPath() {
     try {
       setLoading(true);
       setError('');
-      
-      const learningPathData = {
+        const learningPathData = {
         title,
         description,
         requirements,
@@ -214,7 +213,7 @@ function EditLearningPath() {
         duration: parseInt(duration),
         tags,
         milestones,
-        isPublic,
+        isPublic: true, // Always set to public
         tips,
         userId, // Keep the original userId
       };
@@ -538,18 +537,7 @@ function EditLearningPath() {
               ))}
             </div>
           </div>
-          
-          <div className="mb-8">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                className="form-checkbox h-5 w-5 text-purple-600"
-                checked={isPublic}
-                onChange={(e) => setIsPublic(e.target.checked)}
-              />
-              <span className="ml-2 text-gray-700">Make this learning path public</span>
-            </label>
-          </div>
+            {/* Public/Private toggle removed - always public */}
           
           <div className="flex justify-end space-x-4">
             <button
