@@ -114,11 +114,10 @@ public class LearningProgressController {
      * @param pathId The ID of the learning path
      * @return The progress if found with status 200 (OK), or 404 (Not Found)
      */
-    @GetMapping("/users/{userId}/paths/{pathId}")
+   @GetMapping("/users/{userId}/paths/{pathId}")
     public ResponseEntity<LearningProgress> getProgressByUserAndPath(
-            @PathVariable String userId, 
+            @PathVariable String userId,
             @PathVariable String pathId) {
-        // Validate parameters
         if (userId == null || userId.trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID cannot be empty");
         }
