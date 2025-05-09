@@ -366,159 +366,138 @@ function PostsPage() {
 
   if (loading && posts.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-purple-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
         <div className="flex flex-col items-center">
-          <div className="w-16 h-16 border-t-4 border-b-4 border-purple-500 rounded-full animate-spin"></div>
-          <p className="mt-4 text-purple-600 font-medium">Loading posts...</p>
+          <div className="relative w-20 h-20">
+            <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-b-4 border-indigo-600 rounded-full animate-spin"></div>
+            <div className="absolute top-2 right-2 w-12 h-12 border-t-4 border-b-4 border-purple-500 rounded-full animate-spin-slow"></div>
+          </div>
+          <p className="mt-6 text-indigo-700 font-medium text-lg">Loading brilliant ideas...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-b from-blue-50 to-white min-h-screen py-6 px-4 sm:px-6 lg:px-8">
-      {/* Header Section with decorative elements */}
-      <div className="max-w-7xl mx-auto relative">
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100 rounded-full filter blur-3xl opacity-30 -z-10 transform translate-x-1/3 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-100 rounded-full filter blur-3xl opacity-20 -z-10 transform -translate-x-1/3"></div>
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-blue-50 to-white">
+      {/* Main container with enhanced padding for better readability */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        {/* Hero section with improved styling */}
+        <div className="relative mb-10">
+          {/* Decorative elements - subtle floating shapes */}
+          <div className="absolute -top-20 -right-20 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+          <div className="absolute top-40 left-40 w-80 h-80 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
 
-        <div className="relative z-10">
-          <div className="bg-white bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 border border-blue-100">
-            <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-              <div>
-                <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800 mb-2">
-                  Community Posts
-                </h1>
-                <p className="text-gray-600 max-w-2xl">
-                  Connect, share knowledge, and grow with our community of passionate learners
-                </p>
-              </div>
-              {isAuthenticated && (
-                <Link 
-                  to="/posts/new" 
-                  className="mt-4 sm:mt-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg flex items-center group"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  Create New Post
-                </Link>
-              )}
-            </div>
-
-            {/* Filter & Search Section */}
-            <div className="mt-6">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div className="flex flex-wrap items-center gap-3">
-                  <button 
-                    className={`px-5 py-2.5 rounded-lg transition-all duration-300 flex items-center ${
-                      filter === "latest" 
-                        ? "bg-blue-600 text-white shadow-md" 
-                        : "bg-blue-50 hover:bg-blue-100 text-blue-700"
-                    }`}
-                    onClick={() => setFilter("latest")}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Latest
-                  </button>
-                  <button 
-                    className={`px-5 py-2.5 rounded-lg transition-all duration-300 flex items-center ${
-                      filter === "popular" 
-                        ? "bg-blue-600 text-white shadow-md" 
-                        : "bg-blue-50 hover:bg-blue-100 text-blue-700"
-                    }`}
-                    onClick={() => setFilter("popular")}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
-                    Popular
-                  </button>
-                  {isAuthenticated && (
-                    <button 
-                      className={`px-5 py-2.5 rounded-lg transition-all duration-300 flex items-center ${
-                        filter === "following" 
-                          ? "bg-blue-600 text-white shadow-md" 
-                          : "bg-blue-50 hover:bg-blue-100 text-blue-700"
-                      }`}
-                      onClick={() => setFilter("following")}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                      </svg>
-                      Following
-                    </button>
-                  )}
+          {/* Main header card with glass effect */}
+          <div className="relative z-10 rounded-2xl bg-white bg-opacity-80 backdrop-blur-lg shadow-xl border border-indigo-100/50 overflow-hidden">
+            <div className="flex flex-col px-6 pt-8 pb-6 md:p-10">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-extrabold text-blue-600 leading-tight">
+                    Knowledge Exchange
+                  </h1>
+                  <p className="mt-2 text-lg text-gray-600 max-w-2xl leading-relaxed">
+                    Discover insights, share expertise, and connect with a community of passionate learners
+                  </p>
                 </div>
-                <form onSubmit={handleSearch} className="flex w-full md:w-auto">
-                  <div className="relative flex-grow">
-                    <input
-                      type="search"
-                      placeholder="Search posts..."
-                      className="pl-10 pr-4 py-2.5 w-full bg-gray-50 border border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <button 
-                    type="submit" 
-                    className="bg-blue-600 text-white px-5 py-2.5 rounded-r-lg hover:bg-blue-700 transition-colors shadow-md"
+
+                {/* Create post button with enhanced animation */}
+                {isAuthenticated && (
+                  <Link 
+                    to="/posts/new" 
+                    className="group flex items-center justify-center px-6 py-3 md:py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-medium shadow-md hover:shadow-indigo-200/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
                   >
-                    Search
-                  </button>
-                </form>
+                    <span className="relative flex items-center">
+                      <span className="absolute -left-1 -top-1 w-8 h-8 rounded-full bg-white/20 transform scale-0 group-hover:scale-100 transition-transform duration-300"></span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 transition-transform duration-300 group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      <span>Create New Post</span>
+                    </span>
+                  </Link>
+                )}
+              </div>
+
+              {/* Improved search section without filters */}
+              <div className="mt-8 pb-2">
+                <div className="flex justify-center">
+                  {/* Enhanced search box */}
+                  <form onSubmit={handleSearch} className="flex w-full max-w-lg">
+                    <div className="relative flex-grow">
+                      <input
+                        type="search"
+                        placeholder="Search for topics, keywords, or ideas..."
+                        className="pl-10 pr-4 py-3 w-full bg-white/80 border border-gray-200 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                      <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                      </div>
+                    </div>
+                    <button 
+                      type="submit" 
+                      className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-5 py-3 rounded-r-xl hover:shadow-lg transition-all duration-200 flex items-center"
+                    >
+                      <span>Search</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Error Message */}
+        {/* Improved error message styling */}
         {error && (
-          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-md">
-            <div className="flex">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="bg-white border-l-4 border-red-500 text-red-700 p-5 mb-8 rounded-lg shadow-md animate-fade-in">
+            <div className="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
-              <span>{error}</span>
+              <span className="font-medium">{error}</span>
             </div>
           </div>
         )}
 
-        {/* Posts Grid */}
+        {/* Posts Grid with improved styling */}
         {posts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {posts.map((post, index) => (
-              <div key={post._id || `post-${index}`} className="group bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border border-purple-50">
-                {/* Post Image */}
+              <div 
+                key={post._id || `post-${index}`} 
+                className="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 overflow-hidden flex flex-col h-full"
+              >
+                {/* Post Image with improved loading */}
                 {post.mediaUrls && post.mediaUrls.length > 0 ? (
-                  <div className="relative h-52 w-full overflow-hidden">
+                  <div className="relative h-52 w-full overflow-hidden bg-gray-100">
                     <img 
                       src={post.mediaUrls[0]} 
-                      alt={post.title} 
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" 
+                      alt={post.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
                     {post.mediaUrls.length > 1 && (
-                      <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                      <div className="absolute top-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-md backdrop-blur-sm">
                         +{post.mediaUrls.length - 1} more
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                 ) : post.mediaItems && post.mediaItems.length > 0 ? (
-                  <div className="relative h-52 w-full overflow-hidden">
+                  <div className="relative h-52 w-full overflow-hidden bg-gray-100">
                     {post.mediaItems[0].type === 'image' ? (
                       <img 
                         src={post.mediaItems[0].url || post.mediaItems[0].preview} 
-                        alt={post.title} 
-                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" 
+                        alt={post.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                       />
                     ) : post.mediaItems[0].type === 'video' ? (
                       <video 
@@ -527,29 +506,33 @@ function PostsPage() {
                         muted
                         loop
                         autoPlay
+                        playsInline
                       />
                     ) : null}
                     {post.mediaItems.length > 1 && (
-                      <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                      <div className="absolute top-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-md backdrop-blur-sm">
                         +{post.mediaItems.length - 1} more
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                 ) : post.image ? (
-                  <div className="relative h-52 w-full overflow-hidden">
+                  <div className="relative h-52 w-full overflow-hidden bg-gray-100">
                     <img 
                       src={post.image} 
-                      alt={post.title} 
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" 
+                      alt={post.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                ) : null}
+                ) : (
+                  <div className="h-24 w-full bg-gradient-to-r from-indigo-100 to-blue-100"></div>
+                )}
                 
                 {/* Post Content */}
-                <div className="p-6">
-                  {/* Author Info */}
+                <div className="p-6 flex-grow flex flex-col">
+                  {/* Author Info with improved styling */}
                   <div className="flex items-center mb-4">
                     {post.author && post.author.username ? (
                       <Link to={`/profile/${post.author._id || post.author.id}`} className="flex items-center group">
@@ -557,15 +540,16 @@ function PostsPage() {
                           <img 
                             src={post.author.profileImage} 
                             alt={post.author.username} 
-                            className="w-11 h-11 rounded-full mr-3 object-cover ring-2 ring-purple-500 shadow-md" 
+                            className="w-10 h-10 rounded-full mr-3 object-cover ring-2 ring-indigo-500/70 shadow-md" 
+                            loading="lazy"
                           />
                         ) : (
-                          <div className="w-11 h-11 rounded-full flex items-center justify-center mr-3 bg-gradient-to-br from-purple-500 to-indigo-600 text-white font-bold shadow-md">
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold shadow-md">
                             {post.author.username.charAt(0).toUpperCase()}
                           </div>
                         )}
                         <div>
-                          <p className="font-semibold text-gray-800 group-hover:text-purple-600 transition-colors">
+                          <p className="font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">
                             {post.author.username}
                           </p>
                           <p className="text-xs text-gray-500 flex items-center">
@@ -589,7 +573,7 @@ function PostsPage() {
                         </div>
                         <div>
                           <p className="font-medium text-gray-800">
-                            {post.userId ? `User-${post.userId.substring(0, 5)}...` : "Unknown User"}
+                            {post.userId ? `User-${post.userId.substring(0, 5)}...` : "Anonymous"}
                           </p>
                           <p className="text-xs text-gray-500">
                             {new Date(post.createdAt).toLocaleDateString('en-US', {
@@ -603,8 +587,10 @@ function PostsPage() {
                     )}
                   </div>
                   
-                  {/* Title */}
-                  <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-purple-700 transition-colors">{post.title}</h2>
+                  {/* Title with improved typography */}
+                  <h2 className="text-xl font-bold text-gray-800 mb-3 line-clamp-2 group-hover:text-indigo-700 transition-colors">
+                    {post.title}
+                  </h2>
                   
                   {/* Post Management Buttons */}
                   {isAuthenticated && currentUser && post.author && 
@@ -631,8 +617,8 @@ function PostsPage() {
                     </div>
                   )}
                   
-                  {/* Content */}
-                  <div className="bg-gray-50 rounded-xl p-4 mb-4">
+                  {/* Content with improved card styling */}
+                  <div className="bg-gradient-to-r from-gray-50 to-white rounded-xl p-4 mb-4 border border-gray-100">
                     <p className="text-gray-600 line-clamp-3">
                       {post.content.length > 150 
                         ? post.content.substring(0, 150) + "..." 
@@ -640,13 +626,13 @@ function PostsPage() {
                     </p>
                   </div>
                   
-                  {/* Tags */}
+                  {/* Tags with improved design */}
                   {post.tags && post.tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mb-5">
                       {post.tags.map((tag, index) => (
                         <span 
                           key={`${post._id}-tag-${index}`} 
-                          className="bg-purple-50 text-purple-600 text-xs px-3 py-1.5 rounded-full hover:bg-purple-100 transition-colors border border-purple-100"
+                          className="bg-indigo-50 text-indigo-600 text-xs px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors border border-indigo-100/50"
                         >
                           #{tag}
                         </span>
@@ -654,9 +640,9 @@ function PostsPage() {
                     </div>
                   )}
                   
-                  {/* Post Actions */}
-                  <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
-                    <div className="flex items-center gap-3">
+                  {/* Post Actions with improved interactivity */}
+                  <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
+                    <div className="flex items-center gap-4">
                       <button 
                         className={`flex items-center ${
                           isAuthenticated && post.likes && Array.isArray(post.likes) && post.likes.includes(currentUser?._id)
@@ -665,7 +651,7 @@ function PostsPage() {
                         } transition-colors group`}
                         onClick={() => likePost(post._id)}
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1.5 group-hover:scale-110 transition-transform" fill={
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1.5 transition-transform duration-300 group-hover:scale-110 group-active:scale-95" fill={
                           isAuthenticated && post.likes && Array.isArray(post.likes) && post.likes.includes(currentUser?._id)
                             ? "currentColor" 
                             : "none"
@@ -675,8 +661,8 @@ function PostsPage() {
                         <span className="font-medium">{Array.isArray(post.likes) ? post.likes.length : 0}</span>
                       </button>
                       
-                      <Link to={`/posts/${post._id}`} className="flex items-center text-gray-500 hover:text-purple-500 transition-colors group">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1.5 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <Link to={`/posts/${post._id}`} className="flex items-center text-gray-500 hover:text-indigo-500 transition-colors group">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1.5 transition-transform duration-300 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
                         <span className="font-medium">{post.comments?.length || 0}</span>
@@ -685,13 +671,13 @@ function PostsPage() {
                     
                     <Link 
                       to={`/posts/${post._id}`} 
-                      className="text-sm bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center group hover:shadow-md"
+                      className="text-sm bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-4 py-2 rounded-lg transition-all duration-300 font-medium flex items-center group hover:shadow-lg hover:shadow-indigo-100"
                     >
                       {isAuthenticated && currentUser && post.author && 
                        (currentUser._id === post.author._id || currentUser.id === post.author._id) ? (
                         <>
-                          View & Manage Post
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1.5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          Manage Post
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                           </svg>
@@ -699,7 +685,7 @@ function PostsPage() {
                       ) : (
                         <>
                           Read More 
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1.5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
                         </>
@@ -707,18 +693,18 @@ function PostsPage() {
                     </Link>
                   </div>
 
-                  {/* Comments Section */}
+                  {/* Comments Section with improved usability */}
                   <div className="mt-5 pt-4 border-t border-gray-100">
                     <h3 className="text-sm font-semibold text-gray-700 flex items-center mb-3">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                       </svg>
-                      Recent Comments
+                      Recent Comments {post.comments?.length > 0 && `(${post.comments.length})`}
                     </h3>
                     
                     {post.comments && post.comments.length > 0 ? (
                       <div className="space-y-3 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
-                        {post.comments.map((comment) => {
+                        {post.comments.slice(0, 3).map((comment) => {
                           const commentId = comment._id || comment.id;
                           if (!commentId) {
                             console.warn("Comment without ID:", comment);
@@ -726,7 +712,7 @@ function PostsPage() {
                           return (
                             <div 
                               key={commentId || `temp-${Date.now()}`} 
-                              className="bg-gray-50 rounded-lg p-3 border border-gray-100 hover:border-purple-100 transition-all hover:shadow-sm"
+                              className="bg-gray-50 rounded-lg p-3 border border-gray-100 hover:border-indigo-100 transition-all hover:shadow-sm"
                             >
                               <div className="flex justify-between items-start">
                                 <span className="text-sm font-medium text-gray-700 flex items-center">
@@ -735,9 +721,10 @@ function PostsPage() {
                                       src={comment.author.profileImage} 
                                       alt={comment.author?.username || "User"}
                                       className="w-5 h-5 rounded-full mr-2 object-cover"
+                                      loading="lazy"
                                     />
                                   ) : (
-                                    <div className="w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-gradient-to-r from-purple-400 to-purple-600 text-white text-xs font-bold">
+                                    <div className="w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-gradient-to-r from-indigo-400 to-indigo-600 text-white text-xs font-bold">
                                       {(comment.author?.username || "A")[0].toUpperCase()}
                                     </div>
                                   )}
@@ -776,13 +763,13 @@ function PostsPage() {
                                 <div className="mt-2">
                                   <input
                                     type="text"
-                                    className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                                    className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                                     value={editingText}
                                     onChange={(e) => setEditingText(e.target.value)}
                                   />
                                   <div className="mt-2 flex space-x-2">
                                     <button
-                                      className="px-3 py-1 text-xs bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+                                      className="px-3 py-1 text-xs bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
                                       onClick={() => handleEditComment(commentId, post._id)}
                                       data-comment-id={commentId}
                                     >
@@ -813,6 +800,12 @@ function PostsPage() {
                             </div>
                           );
                         })}
+                        
+                        {post.comments.length > 3 && (
+                          <Link to={`/posts/${post._id}`} className="block text-center text-sm text-indigo-600 hover:text-indigo-700 font-medium py-2 transition-colors">
+                            View all {post.comments.length} comments
+                          </Link>
+                        )}
                       </div>
                     ) : (
                       <div className="bg-gray-50 rounded-lg p-3 text-center border border-dashed border-gray-200">
@@ -820,7 +813,7 @@ function PostsPage() {
                       </div>
                     )}
                     
-                    {/* Add Comment Section */}
+                    {/* Add Comment Section with better accessibility */}
                     {isAuthenticated && (
                       <div className="mt-3">
                         {post._id ? (
@@ -828,15 +821,18 @@ function PostsPage() {
                             <div className="relative flex-grow">
                               <input
                                 type="text"
-                                className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all pr-10"
+                                className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all pr-10"
                                 placeholder="Share your thoughts..."
                                 value={commentTexts[post._id] || ""}
                                 onChange={(e) => handleCommentTextChange(post._id, e.target.value)}
+                                aria-label="Comment text"
                               />
                             </div>
                             <button
-                              className="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-r-lg hover:from-purple-700 hover:to-purple-800 transition-colors shadow-sm flex items-center"
+                              className="px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-r-lg hover:shadow-md transition-all duration-200 flex items-center"
                               onClick={() => handleAddComment(post._id)}
+                              aria-label="Post comment"
+                              disabled={!commentTexts[post._id]?.trim()}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -855,26 +851,28 @@ function PostsPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-purple-50">
+          <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-indigo-50 transition-all hover:shadow-xl">
             <div className="p-8 text-center">
               <div className="relative">
-                <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-purple-100 rounded-full filter blur-xl opacity-70"></div>
-                <div className="relative z-10 w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-indigo-100 rounded-full filter blur-xl opacity-70"></div>
+                <div className="relative z-10 w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                   </svg>
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">No Posts Found</h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">No Posts Found</h3>
               <p className="text-lg text-gray-600 mb-8 max-w-lg mx-auto">
                 {filter === "following" && isAuthenticated 
                   ? "Start following more users to see their posts here! Connect with others to build your personalized feed."
+                  : filter === "popular"
+                  ? "Popular posts appear here based on engagement. Check back soon or create new content!"
                   : "Be the first to share your knowledge and start the conversation in our community!"}
               </p>
               {isAuthenticated ? (
                 <Link 
                   to="/posts/new" 
-                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg"
+                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl shadow-md transition transform hover:scale-105 hover:shadow-lg"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -885,21 +883,27 @@ function PostsPage() {
                 <div className="space-x-4">
                   <Link 
                     to="/login" 
-                    className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg shadow-md transition hover:bg-purple-700"
+                    className="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-xl shadow-md transition hover:bg-indigo-700"
                   >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
                     Log In
                   </Link>
                   <Link 
                     to="/register" 
-                    className="inline-flex items-center px-6 py-3 bg-purple-100 text-purple-700 rounded-lg shadow-sm transition hover:bg-purple-200"
+                    className="inline-flex items-center px-6 py-3 bg-indigo-100 text-indigo-700 rounded-xl shadow-sm transition hover:bg-indigo-200"
                   >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
                     Sign Up
                   </Link>
                 </div>
               )}
             </div>
             
-            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 py-6 px-8 border-t border-purple-100">
+            <div className="bg-gradient-to-r from-indigo-50 to-blue-50 py-6 px-8 border-t border-indigo-100">
               <p className="text-center text-gray-600">
                 {filter === "popular" 
                   ? "The posts with the most engagement will appear here" 
