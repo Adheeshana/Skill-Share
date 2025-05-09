@@ -146,10 +146,11 @@ public class LearningProgressController {
         }
         
         // Validate required fields
-        if (progress.getUserId() == null || progress.getUserId().isEmpty()) {
+        if (progress.getUserId() == null || progress.getUserId().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID is required");
         }
-        if (progress.getLearningPathId() == null || progress.getLearningPathId().isEmpty()) {
+
+        if (progress.getLearningPathId() == null || progress.getLearningPathId().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Learning Path ID is required");
         }
         
