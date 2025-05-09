@@ -298,12 +298,11 @@ function LearningPathExplorer() {
                   placeholder="Search for skills, subjects, or technologies..."
                   className="w-full pl-6 pr-14 py-4 rounded-full shadow-lg focus:ring-2 focus:ring-purple-500 focus:outline-none border border-purple-100 text-gray-700"
                   aria-label="Search learning paths"
-                />
-                <button
+                />                <button
                   type="submit"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-600 to-purple-700 text-white p-3 rounded-full shadow-md hover:shadow-lg transition-all"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-full shadow-md hover:shadow-lg transition-all flex items-center justify-center w-10 h-10 hover:from-purple-700 hover:to-purple-800"
                 >
-                  <FaSearch />
+                  <FaSearch className="text-lg" />
                 </button>
               </form>
             </motion.div>
