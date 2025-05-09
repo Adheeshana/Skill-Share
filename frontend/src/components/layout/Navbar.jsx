@@ -239,8 +239,8 @@ function Navbar() {
           </div>
 
           <div className="flex items-center space-x-2">
-            {/* Notifications Icon */}
-            {currentUser && (
+            {/* Notifications Icon - Hidden */}
+            {/* {currentUser && (
               <div className="relative">
                 <button className={`p-2 rounded-full transition-all duration-300 ${
                   scrolled 
@@ -255,7 +255,7 @@ function Navbar() {
                   )}
                 </button>
               </div>
-            )}
+            )} */}
             
             {currentUser ? (
               <div className="relative" ref={dropdownRef}>
