@@ -53,10 +53,8 @@ public class LearningProgressController {
         }
         
         return new ResponseEntity<>(learningProgressService.createProgress(progress), HttpStatus.CREATED);
-    }    /**
-     * Retrieves a learning progress record by its ID.
-     * @param id The ID of the progress to retrieve
-     * @return The progress if found with status 200 (OK), or 404 (Not Found)
+    }      /**
+     * Retrieves a progress record by ID.
      */
     @GetMapping("/{id}")
     public ResponseEntity<LearningProgress> getProgressById(@PathVariable String id) {
