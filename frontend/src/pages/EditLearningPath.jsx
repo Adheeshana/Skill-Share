@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FaGraduationCap, FaPlus, FaTimes, FaArrowLeft } from 'react-icons/fa';
+import { FaGraduationCap, FaPlus, FaTimes, FaArrowLeft, FaLink } from 'react-icons/fa';
 import LearningPathService from '../services/LearningPathService';
 import { useAuth } from '../utils/AuthContext';
 
@@ -152,7 +152,6 @@ function EditLearningPath() {
     updatedMilestones[index][field] = value;
     setMilestones(updatedMilestones);
   };
-
   // Handle adding a resource to a milestone
   const handleAddResource = (index, resource) => {
     if (resource.trim()) {
@@ -497,36 +496,43 @@ function EditLearningPath() {
                       min="1"
                     />
                   </div>
-                  
-                  <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-2">
-                      Resources (optional)
+                    <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-2 flex items-center">
+                      <FaLink className="mr-1 text-blue-500" /> Resources (optional)
                     </label>
-                    <div className="mb-2">
-                      {milestone.resources && milestone.resources.map((resource, resourceIndex) => (
-                        <div key={resourceIndex} className="flex items-center mb-2">
-                          <span className="flex-grow bg-white px-3 py-2 border border-gray-300 rounded-lg">{resource}</span>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveResource(index, resourceIndex)}
-                            className="ml-2 text-red-600 hover:text-red-800"
-                          >
-                            <FaTimes />
-                          </button>
+                    <div className="mb-2 space-y-2">
+                      {milestone.resources && milestone.resources.length > 0 ? (
+                        milestone.resources.map((resource, resourceIndex) => (
+                          <div key={resourceIndex} className="flex items-center group hover:bg-gray-50 p-1 rounded-lg transition-all">
+                            <FaLink className="text-blue-500 mr-2 opacity-70" />
+                            <span className="flex-grow text-sm">{resource}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveResource(index, resourceIndex)}
+                              className="ml-2 p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors opacity-0 group-hover:opacity-100"
+                              aria-label="Remove resource"
+                            >
+                              <FaTimes />
+                            </button>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-sm text-gray-400 italic flex items-center">
+                          <FaLink className="mr-2 opacity-50" /> No resources added yet
                         </div>
-                      ))}
+                      )}
                     </div>
                     <div className="flex">
                       <input
                         type="text"
                         id={`resource-input-${index}`}
-                        className="flex-grow px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400"
-                        placeholder="Add a resource link or description..."
+                        className="flex-grow px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all"
+                        placeholder="Add a book, article, video or URL..."
                         onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddResource(index, e.target.value))}
                       />
                       <button
                         type="button"
-                        className="bg-purple-600 text-white px-3 py-2 rounded-r-lg hover:bg-purple-700 transition-colors"
+                        className="bg-blue-600 text-white px-3 py-2 rounded-r-lg hover:bg-blue-700 transition-colors"
                         onClick={() => handleAddResource(index, document.getElementById(`resource-input-${index}`).value)}
                       >
                         Add
