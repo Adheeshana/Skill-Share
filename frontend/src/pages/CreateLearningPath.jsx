@@ -9,6 +9,8 @@ function CreateLearningPath() {
   const { currentUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [titleError, setTitleError] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
   
   // Form state
   const [title, setTitle] = useState('');
@@ -29,6 +31,35 @@ function CreateLearningPath() {
   }]);
   const [isPublic, setIsPublic] = useState(true);
   const [activeSection, setActiveSection] = useState('basic');
+
+  // Validation function to check if string contains only numbers
+  const isNumericOnly = (text) => {
+    return /^\d+$/.test(text.trim());
+  };
+
+  // Handle title change with validation
+  const handleTitleChange = (e) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+    
+    if (newTitle.trim() && isNumericOnly(newTitle)) {
+      setTitleError('Title cannot contain only numbers');
+    } else {
+      setTitleError('');
+    }
+  };
+
+  // Handle description change with validation
+  const handleDescriptionChange = (e) => {
+    const newDescription = e.target.value;
+    setDescription(newDescription);
+    
+    if (newDescription.trim() && isNumericOnly(newDescription)) {
+      setDescriptionError('Description cannot contain only numbers');
+    } else {
+      setDescriptionError('');
+    }
+  };
 
   // Handle adding a tag
   const handleAddTag = () => {
@@ -127,8 +158,22 @@ function CreateLearningPath() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Basic validation
     if (!title.trim() || !description.trim()) {
       setError('Title and description are required');
+      return;
+    }
+    
+    // Check if title or description contains only numbers
+    if (isNumericOnly(title)) {
+      setTitleError('Title cannot contain only numbers');
+      setError('Please correct the errors before submitting');
+      return;
+    }
+    
+    if (isNumericOnly(description)) {
+      setDescriptionError('Description cannot contain only numbers');
+      setError('Please correct the errors before submitting');
       return;
     }
     
@@ -271,12 +316,15 @@ function CreateLearningPath() {
                   <input
                     type="text"
                     id="title"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all"
+                    className={`w-full px-4 py-3 border ${titleError ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all`}
                     placeholder="e.g. Learning React from Scratch"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={handleTitleChange}
                     required
                   />
+                  {titleError && (
+                    <p className="mt-1 text-sm text-red-500">{titleError}</p>
+                  )}
                 </div>
                 
                 <div>
@@ -288,12 +336,15 @@ function CreateLearningPath() {
                   </label>
                   <textarea
                     id="description"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all h-32"
+                    className={`w-full px-4 py-3 border ${descriptionError ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all h-32`}
                     placeholder="Provide a detailed description of the learning path"
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={handleDescriptionChange}
                     required
                   ></textarea>
+                  {descriptionError && (
+                    <p className="mt-1 text-sm text-red-500">{descriptionError}</p>
+                  )}
                 </div>
                 
                 <div>
