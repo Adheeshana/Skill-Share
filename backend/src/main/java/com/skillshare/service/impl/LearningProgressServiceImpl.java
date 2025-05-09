@@ -1,8 +1,10 @@
 package com.skillshare.service.impl;
 
+import com.skillshare.model.LearningPath;
 import com.skillshare.model.LearningProgress;
-import com.skillshare.service.LearningProgressService;
+import com.skillshare.repository.LearningPathRepository;
 import com.skillshare.repository.LearningProgressRepository;
+import com.skillshare.service.LearningProgressService;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
@@ -13,10 +15,13 @@ import java.util.Optional;
 public class LearningProgressServiceImpl implements LearningProgressService {
 
     private final LearningProgressRepository learningProgressRepository;
+    private final LearningPathRepository learningPathRepository;
 
     @Autowired
-    public LearningProgressServiceImpl(LearningProgressRepository learningProgressRepository) {
+    public LearningProgressServiceImpl(LearningProgressRepository learningProgressRepository,
+                                      LearningPathRepository learningPathRepository) {
         this.learningProgressRepository = learningProgressRepository;
+        this.learningPathRepository = learningPathRepository;
     }
 
     @Override
@@ -75,29 +80,43 @@ public class LearningProgressServiceImpl implements LearningProgressService {
     }
 
     @Override
-public void unmarkMilestone(String progressId, String milestoneId) {
-    Optional<LearningProgress> progressOpt = learningProgressRepository.findById(progressId);
-    if (progressOpt.isPresent()) {
-        LearningProgress progress = progressOpt.get();
+    public void unmarkMilestone(String progressId, String milestoneId) {
+        Optional<LearningProgress> progressOpt = learningProgressRepository.findById(progressId);
+        if (progressOpt.isPresent()) {
+            LearningProgress progress = progressOpt.get();
 
-        boolean removed = progress.getCompletedMilestones()
-            .removeIf(m -> milestoneId.equals(m.getMilestoneId()));
+            boolean removed = progress.getCompletedMilestones()
+                .removeIf(m -> milestoneId.equals(m.getMilestoneId()));
 
-        if (removed) {
-            progress.setLastUpdatedAt(LocalDateTime.now());
-            learningProgressRepository.save(progress);
+            if (removed) {
+                progress.setLastUpdatedAt(LocalDateTime.now());
+                learningProgressRepository.save(progress);
+            }
         }
     }
-}
 
     @Override
     public void updateProgressPercentage(String progressId) {
         Optional<LearningProgress> progressOpt = learningProgressRepository.findById(progressId);
         if (progressOpt.isPresent()) {
             LearningProgress progress = progressOpt.get();
-            // Logic to calculate percentage would typically involve
-            // fetching the learning path to get total milestones
-            // For now we'll just update the timestamp
+            
+            // Fetch the learning path to get total milestones
+            Optional<LearningPath> learningPathOpt = learningPathRepository.findById(progress.getLearningPathId());
+            if (learningPathOpt.isPresent()) {
+                LearningPath learningPath = learningPathOpt.get();
+                int totalMilestones = learningPath.getMilestones().size();
+                int completedMilestones = progress.getCompletedMilestones().size();
+                
+                // Calculate percentage
+                double percentage = (totalMilestones > 0) 
+                    ? (double) completedMilestones / totalMilestones * 100 
+                    : 0;
+                
+                // Update the progress percentage
+                progress.setProgressPercentage(percentage);
+            }
+            
             progress.setLastUpdatedAt(LocalDateTime.now());
             learningProgressRepository.save(progress);
         }
