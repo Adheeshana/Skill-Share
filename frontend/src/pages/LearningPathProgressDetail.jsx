@@ -409,7 +409,7 @@ function LearningPathProgressDetail() {
       <div className="mb-6">
         <Link 
           to="/learning-progress" 
-          className="inline-flex items-center text-purple-600 hover:text-purple-800 transition-colors"
+          className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
         >
           <FaChevronLeft className="mr-2" />
           Back to Learning Progress
@@ -442,11 +442,11 @@ function LearningPathProgressDetail() {
             <h3 className="font-semibold text-gray-800">Your Progress</h3>
             <div>
               {progress.progressPercentage >= 100 ? (
-                <span className="status-badge completed-badge text-xs px-2 py-0.5 rounded-full bg-fuchsia-600 text-white">
+                <span className="status-badge completed-badge text-xs px-2 py-0.5 rounded-full bg-blue-600 text-white">
                   Completed
                 </span>
               ) : (
-                <span className="status-badge text-xs px-2 py-0.5 rounded-full bg-violet-600 text-white">
+                <span className="status-badge text-xs px-2 py-0.5 rounded-full bg-blue-600 text-white">
                   In Progress
                 </span>
               )}
@@ -502,8 +502,8 @@ function LearningPathProgressDetail() {
             
             <div className="space-y-3 text-sm">
               <div className="flex items-start">
-                <div className="bg-purple-100 p-2 rounded-lg mr-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="bg-blue-100 p-2 rounded-lg mr-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>

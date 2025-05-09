@@ -228,7 +228,7 @@ function LearningPathExplorer() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white pt-8 pb-16">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white pt-8 pb-16">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         {/* Decorative elements */}
@@ -510,7 +510,7 @@ function LearningPathExplorer() {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <div className="h-full w-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+                      <div className="h-full w-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
                         <FaGraduationCap className="text-6xl text-white opacity-50" />
                       </div>
                     )}
@@ -682,7 +682,7 @@ function LearningPathExplorer() {
       {/* Call to Action Section */}
       {!isAuthenticated && (
         <div className="container mx-auto px-4 mt-16">
-          <div className="bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl shadow-xl overflow-hidden relative">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-900 rounded-2xl shadow-xl overflow-hidden relative">
             <div className="absolute inset-0 overflow-hidden opacity-20">
               <img 
                 src={badgeIcon} 
@@ -700,19 +700,19 @@ function LearningPathExplorer() {
               <h2 className="text-3xl font-bold text-white mb-4">
                 Ready to track your learning journey?
               </h2>
-              <p className="text-purple-100 text-lg mb-8 max-w-2xl mx-auto">
+              <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
                 Create a free account to track your progress, earn badges, and connect with other learners in the Skillshare community.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link 
                   to="/register" 
-                  className="px-8 py-3 bg-white text-purple-700 rounded-lg font-medium hover:bg-gray-100 transition-colors shadow-lg"
+                  className="px-8 py-3 bg-white text-blue-700 rounded-lg font-medium hover:bg-gray-100 transition-colors shadow-lg"
                 >
                   Create Free Account
                 </Link>
                 <Link 
                   to="/login" 
-                  className="px-8 py-3 bg-purple-700 text-white border border-purple-500 rounded-lg font-medium hover:bg-purple-800 transition-colors shadow-lg"
+                  className="px-8 py-3 bg-blue-700 text-white border border-blue-500 rounded-lg font-medium hover:bg-blue-800 transition-colors shadow-lg"
                 >
                   Sign In
                 </Link>

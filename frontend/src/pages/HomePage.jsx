@@ -14,6 +14,9 @@ import leafIcon from '../images/progress/leaf.png';
 import badgeIcon from '../images/progress/badge.png';
 import plantIcon from '../images/progress/plant.png';
 
+// Import new hero images - removed non-existent imports
+// Using direct URLs for images instead
+
 function HomePage() {
   const { currentUser, isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
@@ -135,117 +138,146 @@ function HomePage() {
   ];
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
-      {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-          <div className="absolute top-16 right-16 w-64 h-64 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-          <div className="absolute top-32 left-10 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-40 w-56 h-56 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+    <div className="min-h-screen bg-white">
+      {/* Hero Section with new image */}
+      <section className="pt-24 pb-16 bg-gradient-to-b from-blue-50 to-white relative overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-4 -right-4 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+          <div className="absolute -bottom-8 right-40 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+          <div className="absolute -bottom-8 left-40 w-56 h-56 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-5xl mx-auto text-center">
-            <motion.h1 
-              className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-900"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              Share Knowledge, <br />
-              <span className="text-purple-600">Grow Together</span>
-            </motion.h1>
+          <div className="flex flex-col lg:flex-row items-center gap-8 max-w-6xl mx-auto">
+            {/* Left side content */}
+            <div className="lg:w-1/2 text-center lg:text-left">
+              <motion.h1 
+                className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-900"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                Share Knowledge, <br />
+                <span className="text-blue-600">Grow Together</span>
+              </motion.h1>
 
-            <motion.p 
-              className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              Track your learning journey, share your knowledge, and connect with a community 
-              of passionate learners to achieve your goals.
-            </motion.p>
+              <motion.p 
+                className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto lg:mx-0"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                Track your learning journey, share your knowledge, and connect with a community 
+                of passionate learners to achieve your goals.
+              </motion.p>
 
-            <motion.div 
-              className="relative max-w-2xl mx-auto mb-10"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <input
-                type="text"
-                placeholder="What skill would you like to learn today?"
-                className="w-full px-6 py-4 rounded-full shadow-lg border border-purple-100 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-600 to-purple-700 text-white p-3 rounded-full hover:shadow-lg transition-all">
-                <FaSearch />
-              </button>
-            </motion.div>
+              <motion.div 
+                className="relative max-w-2xl mx-auto lg:mx-0 mb-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <input
+                  type="text"
+                  placeholder="What skill would you like to learn today?"
+                  className="w-full px-6 py-4 rounded-full shadow-lg border border-purple-100 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-600 to-purple-700 text-white p-3 rounded-full hover:shadow-lg transition-all">
+                  <FaSearch />
+                </button>
+              </motion.div>
 
-            <motion.div 
-              className="flex flex-wrap justify-center gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              {isAuthenticated ? (
-                <>
-                  <Link to="/learning-paths" className="inline-flex items-center px-8 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
-                    <FaSeedling className="mr-2" />
-                    Explore Learning Paths
-                  </Link>
-                  <Link to="/posts" className="inline-flex items-center px-8 py-3 rounded-lg bg-white text-purple-700 font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
-                    <FaUsers className="mr-2" />
-                    Join Discussions
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link to="/register" className="inline-flex items-center px-8 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
-                    <FaGraduationCap className="mr-2" />
-                    Start Learning for Free
-                  </Link>
-                  <Link to="/login" className="inline-flex items-center px-8 py-3 rounded-lg bg-white text-purple-700 font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
-                    Already a Member? Log In
-                  </Link>
-                </>
-              )}
-            </motion.div>
-            
-            {/* Floating elements */}
-            <div className="hidden md:block">
-              <motion.img 
-                src={leafIcon} 
-                alt="Leaf" 
-                className="absolute top-32 right-10 w-20 h-20 opacity-40"
-                animate={{ 
-                  y: [0, -10, 0],
-                  rotate: [0, 5, 0]
-                }}
-                transition={{ 
-                  duration: 4,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-              />
-              <motion.img 
-                src={badgeIcon} 
-                alt="Badge" 
-                className="absolute bottom-12 left-10 w-16 h-16 opacity-30"
-                animate={{ 
-                  y: [0, 10, 0],
-                  rotate: [0, -5, 0]
-                }}
-                transition={{ 
-                  duration: 5,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-              />
+              <motion.div 
+                className="flex flex-wrap justify-center lg:justify-start gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                {isAuthenticated ? (
+                  <>
+                    <Link to="/learning-paths" className="inline-flex items-center px-8 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
+                      <FaSeedling className="mr-2" />
+                      Explore Learning Paths
+                    </Link>
+                    <Link to="/posts" className="inline-flex items-center px-8 py-3 rounded-lg bg-white text-purple-700 font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
+                      <FaUsers className="mr-2" />
+                      Join Discussions
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/register" className="inline-flex items-center px-8 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
+                      <FaGraduationCap className="mr-2" />
+                      Start Learning for Free
+                    </Link>
+                    <Link to="/login" className="inline-flex items-center px-8 py-3 rounded-lg bg-white text-purple-700 font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
+                      Already a Member? Log In
+                    </Link>
+                  </>
+                )}
+              </motion.div>
             </div>
+            
+            {/* Hero image - New addition */}
+            <motion.div 
+              className="lg:w-1/2"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+            >
+              <div className="relative">
+                <img 
+                  src="https://img.freepik.com/free-vector/education-learning-concept-illustration_114360-7478.jpg?w=900&t=st=1714322456~exp=1714323056~hmac=81c67a7c5bce2a9fc86f7c5c3f37e6cda8c4bbabde07bb2a6c5c0abcd28afcc1"
+                  alt="Learning and Skill Development"
+                  className="w-full rounded-xl shadow-lg"
+                />
+                <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-lg shadow-lg">
+                  <div className="flex items-center gap-2">
+                    <div className="p-2 bg-green-100 rounded-full">
+                      <FaSeedling className="text-green-600 text-xl" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">Start Learning</p>
+                      <p className="text-xs text-gray-500">500+ learning paths</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+          
+          {/* Floating elements */}
+          <div className="hidden md:block">
+            <motion.img 
+              src={leafIcon} 
+              alt="Leaf" 
+              className="absolute top-32 right-10 w-20 h-20 opacity-40"
+              animate={{ 
+                y: [0, -10, 0],
+                rotate: [0, 5, 0]
+              }}
+              transition={{ 
+                duration: 4,
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+            />
+            <motion.img 
+              src={badgeIcon} 
+              alt="Badge" 
+              className="absolute bottom-12 left-10 w-16 h-16 opacity-30"
+              animate={{ 
+                y: [0, 10, 0],
+                rotate: [0, -5, 0]
+              }}
+              transition={{ 
+                duration: 5,
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+            />
           </div>
         </div>
       </section>
@@ -419,7 +451,7 @@ function HomePage() {
       </section>
       
       {/* Statistics Section */}
-      <section className="py-16 bg-gradient-to-r from-purple-700 to-purple-900 text-white">
+      <section className="py-16 bg-gradient-to-r from-blue-700 to-blue-900 text-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {stats.map((stat, index) => (

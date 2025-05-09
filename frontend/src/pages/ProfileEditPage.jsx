@@ -255,7 +255,7 @@ function ProfileEditPage() {
 
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2.5 rounded-lg font-medium transition-colors shadow-md flex items-center justify-center"
                   disabled={loading}
                 >
                   {loading ? "Saving..." : "Save Profile"}
