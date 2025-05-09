@@ -30,17 +30,28 @@ function LearningProgressPage() {
         // Get full details for each learning progress
         const progressDetails = await Promise.all(
           response.data.map(async (progress) => {
-            const detailResponse = await LearningProgressService.getProgressDetail(progress._id || progress.id);
-            return detailResponse.data;
+            try {
+              const detailResponse = await LearningProgressService.getProgressDetail(progress._id || progress.id);
+              if (!detailResponse.data) {
+                console.error("Failed to get details for progress:", progress._id || progress.id);
+                return null;
+              }
+              return detailResponse.data;
+            } catch (err) {
+              console.error("Error fetching progress details for item:", progress._id || progress.id, err);
+              return null;
+            }
           })
         );
 
-        setUserProgress(progressDetails);
+        // Filter out any null values from failed requests
+        const validProgressDetails = progressDetails.filter(detail => detail !== null);
+        setUserProgress(validProgressDetails);
         setLoading(false);
 
         // If progressId is provided in URL, select that progress
         if (progressId) {
-          const selectedProgress = progressDetails.find(p => 
+          const selectedProgress = validProgressDetails.find(p => 
             (p._id || p.id) === progressId
           );
           
@@ -61,26 +72,34 @@ function LearningProgressPage() {
   // Mark a milestone as completed
   const completeMilestone = async (progressId, milestoneId) => {
     try {
+      // Disable any UI interactions while processing
+      setLoading(true);
+      
       await LearningProgressService.completeMilestone(progressId, milestoneId);
       await LearningProgressService.updateProgressPercentage(progressId);
       
       // Update the UI by refetching the progress details
-      const updatedProgress = await LearningProgressService.getProgressDetail(progressId);
+      const updatedProgressResponse = await LearningProgressService.getProgressDetail(progressId);
+      if (!updatedProgressResponse.data) {
+        throw new Error("Failed to get updated progress data");
+      }
+      
+      const updatedProgress = updatedProgressResponse.data;
       
       // Check if this was the last milestone to complete the learning path
-      const path = updatedProgress.data.learningPath;
-      const isCompleted = updatedProgress.data.progressPercentage === 100;
+      const path = updatedProgress.learningPath || {};
+      const isCompleted = updatedProgress.progressPercentage === 100;
       
       // Update the UI
       setUserProgress(prev => 
         prev.map(progress => 
-          (progress._id || progress.id) === progressId ? updatedProgress.data : progress
+          (progress._id || progress.id) === progressId ? updatedProgress : progress
         )
       );
       
       // Also update selectedProgress if it's the one being modified
       if (selectedProgress && (selectedProgress._id || selectedProgress.id) === progressId) {
-        setSelectedProgress(updatedProgress.data);
+        setSelectedProgress(updatedProgress);
       }
       
       // If this completed the learning path, show a celebration
@@ -96,7 +115,7 @@ function LearningProgressPage() {
           </div>
           <div>
             <div class="font-bold">Congratulations! 🎉</div>
-            <div>You've completed the "${path.title}" learning path!</div>
+            <div>You've completed the "${path.title || 'Learning'}" path!</div>
           </div>
         `;
         document.body.appendChild(toast);
@@ -106,21 +125,48 @@ function LearningProgressPage() {
           toast.classList.add('animate-fade-out');
           setTimeout(() => document.body.removeChild(toast), 500);
         }, 5000);
+      } else {
+        // Show a normal completion toast
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in-up';
+        toast.textContent = 'Milestone marked as completed';
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+          toast.classList.add('animate-fade-out');
+          setTimeout(() => document.body.removeChild(toast), 500);
+        }, 3000);
       }
+      
+      setLoading(false);
     } catch (err) {
       console.error("Failed to complete milestone:", err);
       alert("Failed to mark milestone as completed. Please try again.");
+      setLoading(false);
     }
   };
 
   // Add a function to uncomplete a milestone
   const uncompleteMilestone = async (progressId, milestoneId) => {
     try {
+      // Disable UI interactions while processing
+      setLoading(true);
+      
       // First find the completed milestone to delete
       const progress = userProgress.find(p => (p._id || p.id) === progressId);
-      if (!progress || !progress.completedMilestones) return;
+      if (!progress || !progress.completedMilestones) {
+        setLoading(false);
+        return;
+      }
       
       // Check if this is the last milestone in sequence - only allow uncompleting the most recent milestone
+      if (!progress.learningPath || !progress.learningPath.milestones) {
+        console.error("Learning path or milestones missing", progress);
+        setLoading(false);
+        alert("Cannot unmark milestone: learning path details missing");
+        return;
+      }
+      
       const sortedMilestones = [...progress.learningPath.milestones].sort((a, b) => a.orderIndex - b.orderIndex);
       const completedMilestoneIds = progress.completedMilestones.map(cm => cm.milestoneId);
       
@@ -133,8 +179,15 @@ function LearningProgressPage() {
       });
       
       // Only allow uncompleting the last milestone in the sequence
+      if (highestOrderedCompletedIndex === -1) {
+        setLoading(false);
+        alert("No completed milestones found.");
+        return;
+      }
+      
       const milestoneToUncomplete = sortedMilestones[highestOrderedCompletedIndex];
       if ((milestoneToUncomplete.id || milestoneToUncomplete._id) !== milestoneId) {
+        setLoading(false);
         alert("You can only unmark the most recently completed milestone.");
         return;
       }
@@ -144,14 +197,20 @@ function LearningProgressPage() {
       await LearningProgressService.updateProgressPercentage(progressId);
       
       // Update the UI
-      const updatedProgress = await LearningProgressService.getProgressDetail(progressId);
+      const updatedProgressResponse = await LearningProgressService.getProgressDetail(progressId);
+      if (!updatedProgressResponse.data) {
+        throw new Error("Failed to get updated progress data after unmarking milestone");
+      }
+      
+      const updatedProgress = updatedProgressResponse.data;
+      
       setUserProgress(prev => 
-        prev.map(p => (p._id || p.id) === progressId ? updatedProgress.data : p)
+        prev.map(p => (p._id || p.id) === progressId ? updatedProgress : p)
       );
       
       // Also update selectedProgress if it's the one being modified
       if (selectedProgress && (selectedProgress._id || selectedProgress.id) === progressId) {
-        setSelectedProgress(updatedProgress.data);
+        setSelectedProgress(updatedProgress);
       }
       
       const toast = document.createElement('div');
@@ -164,9 +223,11 @@ function LearningProgressPage() {
         setTimeout(() => document.body.removeChild(toast), 500);
       }, 3000);
       
+      setLoading(false);
     } catch (err) {
       console.error("Failed to unmark milestone:", err);
       alert("Failed to unmark milestone as completed. Please try again.");
+      setLoading(false);
     }
   };
 
