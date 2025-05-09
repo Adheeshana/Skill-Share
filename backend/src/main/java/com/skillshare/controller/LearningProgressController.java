@@ -130,10 +130,7 @@ public class LearningProgressController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, 
                     "No progress found for user " + userId + " on learning path " + pathId));
     }    /**
-     * Updates an existing learning progress record.
-     * @param id The ID of the progress to update
-     * @param progress The updated progress information
-     * @return The updated progress with status 200 (OK)
+     * Updates an existing progress record.
      */
     @PutMapping("/{id}")
     public ResponseEntity<LearningProgress> updateProgress(
