@@ -9,16 +9,17 @@ function CreateLearningPath() {
   const { currentUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [titleError, setTitleError] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
   
   // Form state
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [requirements, setRequirements] = useState('');
   const [difficulty, setDifficulty] = useState('Beginner');
-  const [duration, setDuration] = useState(30);
-  const [tags, setTags] = useState([]);
+  const [duration, setDuration] = useState(30);  const [tags, setTags] = useState([]);
   const [currentTag, setCurrentTag] = useState('');
-  const [tips, setTips] = useState('');
+  const [tips, setTips] = useState('');  
   const [milestones, setMilestones] = useState([{ 
     title: '', 
     description: '', 
@@ -27,8 +28,37 @@ function CreateLearningPath() {
     resources: [],
     tips: ''
   }]);
-  const [isPublic, setIsPublic] = useState(true);
+  // isPublic is now handled as a constant
   const [activeSection, setActiveSection] = useState('basic');
+
+  // Validation function to check if string contains only numbers
+  const isNumericOnly = (text) => {
+    return /^\d+$/.test(text.trim());
+  };
+
+  // Handle title change with validation
+  const handleTitleChange = (e) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+    
+    if (newTitle.trim() && isNumericOnly(newTitle)) {
+      setTitleError('Title cannot contain only numbers');
+    } else {
+      setTitleError('');
+    }
+  };
+
+  // Handle description change with validation
+  const handleDescriptionChange = (e) => {
+    const newDescription = e.target.value;
+    setDescription(newDescription);
+    
+    if (newDescription.trim() && isNumericOnly(newDescription)) {
+      setDescriptionError('Description cannot contain only numbers');
+    } else {
+      setDescriptionError('');
+    }
+  };
 
   // Handle adding a tag
   const handleAddTag = () => {
@@ -127,8 +157,22 @@ function CreateLearningPath() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Basic validation
     if (!title.trim() || !description.trim()) {
       setError('Title and description are required');
+      return;
+    }
+    
+    // Check if title or description contains only numbers
+    if (isNumericOnly(title)) {
+      setTitleError('Title cannot contain only numbers');
+      setError('Please correct the errors before submitting');
+      return;
+    }
+    
+    if (isNumericOnly(description)) {
+      setDescriptionError('Description cannot contain only numbers');
+      setError('Please correct the errors before submitting');
       return;
     }
     
@@ -140,8 +184,7 @@ function CreateLearningPath() {
     try {
       setLoading(true);
       setError('');
-      
-      const learningPathData = {
+        const learningPathData = {
         title,
         description,
         requirements,
@@ -149,7 +192,7 @@ function CreateLearningPath() {
         duration: parseInt(duration),
         tags,
         milestones,
-        isPublic,
+        isPublic: true, // Always set to public
         tips,
         userId: currentUser.id || currentUser._id,
       };
@@ -271,12 +314,15 @@ function CreateLearningPath() {
                   <input
                     type="text"
                     id="title"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all"
+                    className={`w-full px-4 py-3 border ${titleError ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all`}
                     placeholder="e.g. Learning React from Scratch"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={handleTitleChange}
                     required
                   />
+                  {titleError && (
+                    <p className="mt-1 text-sm text-red-500">{titleError}</p>
+                  )}
                 </div>
                 
                 <div>
@@ -288,12 +334,15 @@ function CreateLearningPath() {
                   </label>
                   <textarea
                     id="description"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all h-32"
+                    className={`w-full px-4 py-3 border ${descriptionError ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all h-32`}
                     placeholder="Provide a detailed description of the learning path"
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={handleDescriptionChange}
                     required
                   ></textarea>
+                  {descriptionError && (
+                    <p className="mt-1 text-sm text-red-500">{descriptionError}</p>
+                  )}
                 </div>
                 
                 <div>
@@ -425,36 +474,7 @@ function CreateLearningPath() {
                     onChange={(e) => setTips(e.target.value)}
                   ></textarea>
                 </div>
-                
-                <div>
-                  <label className="flex items-center">
-                    <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                      <input 
-                        type="checkbox" 
-                        id="toggle-public" 
-                        name="toggle-public"
-                        checked={isPublic}
-                        onChange={(e) => setIsPublic(e.target.checked)}
-                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in-out"
-                      />
-                      <label 
-                        htmlFor="toggle-public" 
-                        className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-                      ></label>
-                    </div>
-                    <span className="text-gray-700 font-medium">
-                      Make this learning path public
-                      <span className={`ml-2 px-2 py-0.5 rounded text-xs ${isPublic ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                        {isPublic ? 'Public' : 'Private'}
-                      </span>
-                    </span>
-                  </label>
-                  <p className="text-sm text-gray-500 mt-1 ml-12">
-                    {isPublic 
-                      ? 'Anyone can discover and follow this learning path' 
-                      : 'Only you can see this learning path'}
-                  </p>
-                </div>
+                  {/* Public/Private toggle removed */}
                 
                 <div className="flex justify-between pt-4">
                   <button
@@ -664,15 +684,15 @@ function CreateLearningPath() {
                         <label className="block text-gray-700 text-sm font-medium mb-2 flex items-center">
                           <FaLink className="mr-1 text-blue-500" /> Resources (optional)
                         </label>
-                        <div className="mb-2 space-y-2">
-                          {milestone.resources && milestone.resources.length > 0 ? (
+                        <div className="mb-2 space-y-2">                          {milestone.resources && milestone.resources.length > 0 ? (
                             milestone.resources.map((resource, resourceIndex) => (
-                              <div key={resourceIndex} className="flex items-center">
-                                <span className="flex-grow bg-gray-50 px-3 py-2 border border-gray-300 rounded-lg text-sm">{resource}</span>
+                              <div key={resourceIndex} className="flex items-center group hover:bg-gray-50 p-1 rounded-lg transition-all">
+                                <FaLink className="text-blue-500 mr-2 opacity-70" />
+                                <span className="flex-grow text-sm">{resource}</span>
                                 <button
                                   type="button"
                                   onClick={() => handleRemoveResource(index, resourceIndex)}
-                                  className="ml-2 p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
+                                  className="ml-2 p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors opacity-0 group-hover:opacity-100"
                                   aria-label="Remove resource"
                                 >
                                   <FaTimes />
@@ -680,7 +700,9 @@ function CreateLearningPath() {
                               </div>
                             ))
                           ) : (
-                            <div className="text-sm text-gray-400 italic">No resources added yet</div>
+                            <div className="text-sm text-gray-400 italic flex items-center">
+                              <FaLink className="mr-2 opacity-50" /> No resources added yet
+                            </div>
                           )}
                         </div>
                         <div className="flex">
@@ -785,11 +807,10 @@ function CreateLearningPath() {
                     </div>
                     <div>
                       <span className="font-medium text-gray-700">Tags:</span> {tags.length > 0 ? tags.join(', ') : 'None'}
-                    </div>
-                    <div>
+                    </div>                    <div>
                       <span className="font-medium text-gray-700">Public:</span> 
-                      <span className={`ml-1 px-2 py-0.5 rounded text-xs ${isPublic ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                        {isPublic ? 'Yes' : 'No'}
+                      <span className="ml-1 px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">
+                        Yes
                       </span>
                     </div>
                   </div>
