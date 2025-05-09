@@ -8,9 +8,25 @@ const LearningProgressService = {
 
   // Get single progress detail by ID
   getProgressDetail: async (progressId) => {
-    const progress = await api.get(`/progress/${progressId}`);
-    progress.data.learningPath = (await api.get(`/paths/${progress.data.learningPathId}`)).data;
-    return progress;
+    try {
+      const progress = await api.get(`/progress/${progressId}`);
+      if (!progress.data || !progress.data.learningPathId) {
+        console.error("Progress data or learningPathId missing", progress.data);
+        return { data: null };
+      }
+      
+      try {
+        progress.data.learningPath = (await api.get(`/paths/${progress.data.learningPathId}`)).data;
+      } catch (err) {
+        console.error("Error fetching learning path details:", err);
+        progress.data.learningPath = {}; // Provide empty object as fallback
+      }
+      
+      return progress;
+    } catch (err) {
+      console.error("Error fetching progress details:", err);
+      return { data: null };
+    }
   },
 
   // Get progress for a specific user and learning path
