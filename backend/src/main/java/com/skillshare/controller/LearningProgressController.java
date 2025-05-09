@@ -134,11 +134,10 @@ public class LearningProgressController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<LearningProgress> updateProgress(
-            @PathVariable String id, 
+            @PathVariable String id,
             @Valid @RequestBody LearningProgress progress) {
-        // Validate ID
         if (id == null || id.trim().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID cannot be empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Progress ID cannot be empty");
         }
         
         // Check if the progress exists
