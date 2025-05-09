@@ -416,55 +416,9 @@ function LearningPathExplorer() {
                   ))}
                 </div>
               </div>
+              {/*
+             
               
-              {/* Progress filters - only for authenticated users */}
-              {isAuthenticated && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-800 mb-3">Your Progress</h3>
-                  <div className="flex flex-wrap gap-2">
-                    <button 
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                        filter === "all" 
-                          ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-sm" 
-                          : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
-                      }`}
-                      onClick={() => setFilter("all")}
-                    >
-                      All Paths
-                    </button>
-                    <button 
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
-                        filter === "started" 
-                          ? "bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-sm" 
-                          : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
-                      }`}
-                      onClick={() => setFilter("started")}
-                    >
-                      <FaHourglassHalf className="mr-2" /> In Progress
-                    </button>
-                    <button 
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
-                        filter === "completed" 
-                          ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-sm" 
-                          : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
-                      }`}
-                      onClick={() => setFilter("completed")}
-                    >
-                      <FaCheckCircle className="mr-2" /> Completed
-                    </button>
-                    <button 
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                        filter === "not-started" 
-                          ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-sm" 
-                          : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
-                      }`}
-                      onClick={() => setFilter("not-started")}
-                    >
-                      Not Started
-                    </button>
-                  </div>
-                </div>
-              )}
               
               {/* Clear filters option */}
               {(activeTag || searchTerm || filter !== "all") && (
