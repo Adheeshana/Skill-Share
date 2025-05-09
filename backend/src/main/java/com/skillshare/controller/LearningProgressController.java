@@ -141,9 +141,8 @@ public class LearningProgressController {
         }
         
         // Check if the progress exists
-        if (!learningProgressService.getProgressById(id).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, 
-                "Cannot update progress: record not found with ID: " + id);
+       if (!learningProgressService.getProgressById(id).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Progress not found");
         }
         
         // Validate required fields
