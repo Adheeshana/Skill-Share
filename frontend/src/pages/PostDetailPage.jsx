@@ -315,7 +315,56 @@ function PostDetailPage() {
 
             <h2 className="card-title mb-3">{post.title}</h2>
             
-            {post.image && (
+            {/* Post Media Section */}
+            {post.mediaUrls && post.mediaUrls.length > 0 ? (
+              <div className="post-media-container mb-4">
+                {post.mediaUrls.map((url, index) => (
+                  <div key={index} className="card mb-3">
+                    <div className="card-body p-0">
+                      <img 
+                        src={url} 
+                        alt={post.title} 
+                        className="img-fluid rounded shadow-sm" 
+                        style={{ maxHeight: "500px", objectFit: "contain", width: "100%" }} 
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : post.mediaItems && post.mediaItems.length > 0 ? (
+              <div className="post-media-container mb-4">
+                {post.mediaItems.map((item, index) => (
+                  <div key={index} className="card mb-3">
+                    <div className="card-body p-0">
+                      {item.type === 'image' ? (
+                        <img 
+                          src={item.url || item.preview} 
+                          alt={item.description || post.title} 
+                          className="img-fluid rounded shadow-sm" 
+                          style={{ maxHeight: "500px", objectFit: "contain", width: "100%" }} 
+                        />
+                      ) : item.type === 'video' ? (
+                        <video 
+                          src={item.url || item.preview} 
+                          className="img-fluid rounded shadow-sm" 
+                          style={{ maxHeight: "500px", width: "100%" }}
+                          controls
+                        />
+                      ) : null}
+                      
+                      {item.description && (
+                        <div className="p-3 bg-light border-top">
+                          <p className="card-text mb-0">
+                            <i className="bi bi-info-circle me-2"></i>
+                            {item.description}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : post.image ? (
               <div className="post-image-container mb-4">
                 <img 
                   src={post.image} 
@@ -324,7 +373,7 @@ function PostDetailPage() {
                   style={{ maxHeight: "500px", objectFit: "contain", width: "100%" }} 
                 />
               </div>
-            )}
+            ) : null}
             
             <div className="post-content mb-4">
               {post.content.split('\n').map((paragraph, index) => (
