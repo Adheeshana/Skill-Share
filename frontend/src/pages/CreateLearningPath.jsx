@@ -17,10 +17,9 @@ function CreateLearningPath() {
   const [description, setDescription] = useState('');
   const [requirements, setRequirements] = useState('');
   const [difficulty, setDifficulty] = useState('Beginner');
-  const [duration, setDuration] = useState(30);
-  const [tags, setTags] = useState([]);
+  const [duration, setDuration] = useState(30);  const [tags, setTags] = useState([]);
   const [currentTag, setCurrentTag] = useState('');
-  const [tips, setTips] = useState('');
+  const [tips, setTips] = useState('');  
   const [milestones, setMilestones] = useState([{ 
     title: '', 
     description: '', 
@@ -29,7 +28,7 @@ function CreateLearningPath() {
     resources: [],
     tips: ''
   }]);
-  const [isPublic, setIsPublic] = useState(true);
+  // isPublic is now handled as a constant
   const [activeSection, setActiveSection] = useState('basic');
 
   // Validation function to check if string contains only numbers
@@ -185,8 +184,7 @@ function CreateLearningPath() {
     try {
       setLoading(true);
       setError('');
-      
-      const learningPathData = {
+        const learningPathData = {
         title,
         description,
         requirements,
@@ -194,7 +192,7 @@ function CreateLearningPath() {
         duration: parseInt(duration),
         tags,
         milestones,
-        isPublic,
+        isPublic: true, // Always set to public
         tips,
         userId: currentUser.id || currentUser._id,
       };
@@ -476,36 +474,7 @@ function CreateLearningPath() {
                     onChange={(e) => setTips(e.target.value)}
                   ></textarea>
                 </div>
-                
-                <div>
-                  <label className="flex items-center">
-                    <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                      <input 
-                        type="checkbox" 
-                        id="toggle-public" 
-                        name="toggle-public"
-                        checked={isPublic}
-                        onChange={(e) => setIsPublic(e.target.checked)}
-                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in-out"
-                      />
-                      <label 
-                        htmlFor="toggle-public" 
-                        className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-                      ></label>
-                    </div>
-                    <span className="text-gray-700 font-medium">
-                      Make this learning path public
-                      <span className={`ml-2 px-2 py-0.5 rounded text-xs ${isPublic ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                        {isPublic ? 'Public' : 'Private'}
-                      </span>
-                    </span>
-                  </label>
-                  <p className="text-sm text-gray-500 mt-1 ml-12">
-                    {isPublic 
-                      ? 'Anyone can discover and follow this learning path' 
-                      : 'Only you can see this learning path'}
-                  </p>
-                </div>
+                  {/* Public/Private toggle removed */}
                 
                 <div className="flex justify-between pt-4">
                   <button
@@ -836,11 +805,10 @@ function CreateLearningPath() {
                     </div>
                     <div>
                       <span className="font-medium text-gray-700">Tags:</span> {tags.length > 0 ? tags.join(', ') : 'None'}
-                    </div>
-                    <div>
+                    </div>                    <div>
                       <span className="font-medium text-gray-700">Public:</span> 
-                      <span className={`ml-1 px-2 py-0.5 rounded text-xs ${isPublic ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                        {isPublic ? 'Yes' : 'No'}
+                      <span className="ml-1 px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">
+                        Yes
                       </span>
                     </div>
                   </div>
