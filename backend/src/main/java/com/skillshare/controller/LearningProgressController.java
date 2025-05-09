@@ -100,9 +100,8 @@ public class LearningProgressController {
      * @param pathId The ID of the learning path
      * @return List of progress records for the learning path with status 200 (OK)
      */
-    @GetMapping("/paths/{pathId}")
+     @GetMapping("/paths/{pathId}")
     public ResponseEntity<List<LearningProgress>> getProgressByLearningPathId(@PathVariable String pathId) {
-        // Validate pathId
         if (pathId == null || pathId.trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Learning Path ID cannot be empty");
         }
