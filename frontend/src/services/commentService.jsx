@@ -1,5 +1,12 @@
 import api from "./api";
 
+// Define spam patterns to filter out promotional content
+const spamPatterns = [
+  /\b(buy|cheap|discount|offer|free|win|winner|click here|limited time)\b/i,
+  /\bhttps?:\/\//i,
+  /\bwww\./i
+];
+
 // Validation functions
 const validateComment = (content) => {
   const errors = {};
@@ -15,8 +22,7 @@ const validateComment = (content) => {
     errors.content = "Comment is too short (minimum 2 characters)";
   }
   
- 
-  
+  // Check for spam patterns
   for (const pattern of spamPatterns) {
     if (pattern.test(content)) {
       errors.content = "Comment appears to contain promotional content";
