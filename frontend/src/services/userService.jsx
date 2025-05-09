@@ -19,6 +19,19 @@ const UserService = {
     }
   },
 
+  // Google OAuth login method
+  loginWithGoogle: async (googleData) => {
+    try {
+      console.log("Google login request payload:", googleData);
+      const response = await api.post("/users/google-login", googleData);
+      console.log("Google login response:", response.data);
+      return response;
+    } catch (error) {
+      console.error("Google login service error:", error.response || error);
+      throw error;
+    }
+  },
+
   getCurrentUser: async () => {
     return api.get("/users/me");
   },

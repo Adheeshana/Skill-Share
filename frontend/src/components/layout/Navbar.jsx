@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../utils/AuthContext';
 import React, { useRef, useState, useEffect } from 'react';
+// Import for Google OAuth
+import { GoogleLogin } from '@react-oauth/google';
 
 function Navbar() {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, loginWithGoogle } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef(null);
@@ -395,6 +397,11 @@ function Navbar() {
                 >
                   Sign up
                 </Link>
+                {/* Google Sign-In button */}
+                <GoogleLogin
+                  onSuccess={(response) => loginWithGoogle(response)}
+                  onError={() => console.log('Login Failed')}
+                />
               </div>
             )}
           </div>
@@ -520,6 +527,11 @@ function Navbar() {
                 </svg>
                 Sign Up
               </Link>
+              {/* Google Sign-In button */}
+              <GoogleLogin
+                onSuccess={(response) => loginWithGoogle(response)}
+                onError={() => console.log('Login Failed')}
+              />
             </>
           )}
         </div>

@@ -1,6 +1,7 @@
 // src/utils/AuthContext.js
 import { createContext, useContext, useState, useEffect } from "react";
 import UserService from "../services/userService";
+import * as jwt_decode from "jwt-decode";
 
 const AuthContext = createContext(null);
 
@@ -53,6 +54,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Handle Google OAuth login
+  const loginWithGoogle = async (googleResponse) => {
+    try {
+      // Extract the credential from the Google response
+      const { credential } = googleResponse;
+      
+      // Send the credential to the backend for verification
+      const response = await UserService.loginWithGoogle({ credential });
+      
+      // Store the user data and token just like regular login
+      login(response.data);
+      
+      return response.data;
+    } catch (error) {
+      console.error("Google login failed:", error);
+      throw error;
+    }
+  };
+
   const logout = () => {
     setCurrentUser(null);
     localStorage.removeItem("currentUser");
@@ -69,6 +89,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         currentUser,
         login,
+        loginWithGoogle,
         logout,
         loading,
         updateCurrentUser,
