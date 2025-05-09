@@ -1,8 +1,79 @@
 import api from "./api";
 
 const LearningProgressService = {
+  // Validation functions
+  validation: {
+    // Validate progress data 
+    validateProgressData: (progressData) => {
+      if (!progressData) {
+        throw new Error('Progress data is required');
+      }
+      
+      if (!progressData.learningPathId) {
+        throw new Error('Learning path ID is required');
+      }
+      
+      if (!progressData.userId) {
+        throw new Error('User ID is required');
+      }
+      
+      return true;
+    },
+    
+    // Validate completion status
+    validateCompletionStatus: (completionStatus) => {
+      if (completionStatus === undefined || completionStatus === null) {
+        throw new Error('Completion status is required');
+      }
+      
+      if (typeof completionStatus !== 'boolean') {
+        throw new Error('Completion status must be a boolean value');
+      }
+      
+      return true;
+    },
+    
+    // Validate percentage
+    validatePercentage: (percentage) => {
+      if (percentage === undefined || percentage === null) {
+        throw new Error('Percentage is required');
+      }
+      
+      const numPercentage = Number(percentage);
+      
+      if (isNaN(numPercentage)) {
+        throw new Error('Percentage must be a valid number');
+      }
+      
+      if (numPercentage < 0 || numPercentage > 100) {
+        throw new Error('Percentage must be between 0 and 100');
+      }
+      
+      return true;
+    },
+
+    // Validate user ID
+    validateUserId: (userId) => {
+      if (!userId) {
+        throw new Error('User ID is required');
+      }
+      
+      return true;
+    },
+
+    // Validate progress ID
+    validateProgressId: (progressId) => {
+      if (!progressId) {
+        throw new Error('Progress ID is required');
+      }
+      
+      return true;
+    }
+  },
+
   // Get all progress entries for a user
   getUserProgress: (userId) => {
+    LearningProgressService.validation.validateUserId(userId);
     return api.get(`/progress/users/${userId}`);
   },
 
@@ -71,6 +142,27 @@ const LearningProgressService = {
   // Update progress percentage
   updateProgressPercentage: (progressId) => {
     return api.put(`/progress/${progressId}/percentage`);
+  },
+
+  // Update progress percentage manually (for when user wants to set specific percentage)
+  updateManualPercentage: (progressId, percentage) => {
+    LearningProgressService.validation.validateProgressId(progressId);
+    LearningProgressService.validation.validatePercentage(percentage);
+    
+    return api.put(`/progress/${progressId}/manual-percentage`, {
+      percentage: percentage
+    });
+  },
+  
+  // Mark progress as complete
+  markAsComplete: (progressId, isComplete = true) => {
+    LearningProgressService.validation.validateProgressId(progressId);
+    LearningProgressService.validation.validateCompletionStatus(isComplete);
+    
+    return api.put(`/progress/${progressId}/complete`, {
+      isComplete: isComplete,
+      completedAt: isComplete ? new Date().toISOString() : null
+    });
   },
 
   // Delete progress
