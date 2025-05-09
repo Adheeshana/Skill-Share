@@ -470,7 +470,45 @@ function PostsPage() {
             {posts.map((post, index) => (
               <div key={post._id || `post-${index}`} className="group bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border border-purple-50">
                 {/* Post Image */}
-                {post.image && (
+                {post.mediaUrls && post.mediaUrls.length > 0 ? (
+                  <div className="relative h-52 w-full overflow-hidden">
+                    <img 
+                      src={post.mediaUrls[0]} 
+                      alt={post.title} 
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" 
+                    />
+                    {post.mediaUrls.length > 1 && (
+                      <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                        +{post.mediaUrls.length - 1} more
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                ) : post.mediaItems && post.mediaItems.length > 0 ? (
+                  <div className="relative h-52 w-full overflow-hidden">
+                    {post.mediaItems[0].type === 'image' ? (
+                      <img 
+                        src={post.mediaItems[0].url || post.mediaItems[0].preview} 
+                        alt={post.title} 
+                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" 
+                      />
+                    ) : post.mediaItems[0].type === 'video' ? (
+                      <video 
+                        src={post.mediaItems[0].url || post.mediaItems[0].preview}
+                        className="w-full h-full object-cover"
+                        muted
+                        loop
+                        autoPlay
+                      />
+                    ) : null}
+                    {post.mediaItems.length > 1 && (
+                      <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                        +{post.mediaItems.length - 1} more
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                ) : post.image ? (
                   <div className="relative h-52 w-full overflow-hidden">
                     <img 
                       src={post.image} 
@@ -479,7 +517,7 @@ function PostsPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                )}
+                ) : null}
                 
                 {/* Post Content */}
                 <div className="p-6">
