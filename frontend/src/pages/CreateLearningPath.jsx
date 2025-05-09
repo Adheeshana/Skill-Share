@@ -466,7 +466,20 @@ function CreateLearningPath() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setActiveSection('milestones')}
+                    onClick={() => {
+                      if (!title.trim()) {
+                        setError('Please enter a title for your learning path');
+                        document.getElementById('title').focus();
+                        return;
+                      }
+                      if (!description.trim()) {
+                        setError('Please enter a description for your learning path');
+                        document.getElementById('description').focus();
+                        return;
+                      }
+                      setError('');
+                      setActiveSection('milestones');
+                    }}
                     className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg shadow hover:from-purple-700 hover:to-purple-800 transition-all hover:shadow-md flex items-center"
                   >
                     Next: Add Milestones
@@ -495,7 +508,26 @@ function CreateLearningPath() {
                   
                   <button
                     type="button"
-                    onClick={handleAddMilestone}
+                    onClick={() => {
+                      // Check if the last milestone has empty required fields
+                      const lastIndex = milestones.length - 1;
+                      const lastMilestone = milestones[lastIndex];
+                      
+                      if (!lastMilestone.title.trim() || !lastMilestone.description.trim()) {
+                        setError('Please fill in the title and description of the current milestone before adding a new one');
+                        
+                        // Scroll to the last milestone to show the user where the problem is
+                        const milestoneElement = document.getElementById(`milestone-title-${lastIndex}`);
+                        if (milestoneElement) {
+                          milestoneElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          milestoneElement.focus();
+                        }
+                        return;
+                      }
+                      
+                      setError('');
+                      handleAddMilestone();
+                    }}
                     className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-lg shadow hover:from-purple-700 hover:to-purple-800 transition-all hover:shadow-md flex items-center"
                   >
                     <FaPlus className="mr-2" /> Add Milestone
@@ -686,7 +718,29 @@ function CreateLearningPath() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setActiveSection('preview')}
+                  onClick={() => {
+                    // Validate that all milestones have title and description
+                    const emptyMilestone = milestones.find(m => !m.title.trim() || !m.description.trim());
+                    
+                    if (emptyMilestone) {
+                      setError('All milestones must have a title and description before previewing');
+                      
+                      // Find the index of the first empty milestone
+                      const emptyIndex = milestones.findIndex(m => !m.title.trim() || !m.description.trim());
+                      if (emptyIndex >= 0) {
+                        // Focus on the empty milestone's title input
+                        const milestoneElement = document.getElementById(`milestone-title-${emptyIndex}`);
+                        if (milestoneElement) {
+                          milestoneElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          milestoneElement.focus();
+                        }
+                      }
+                      return;
+                    }
+                    
+                    setError('');
+                    setActiveSection('preview');
+                  }}
                   className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg shadow hover:from-purple-700 hover:to-purple-800 transition-all hover:shadow-md flex items-center"
                 >
                   Preview
@@ -703,128 +757,74 @@ function CreateLearningPath() {
               <div className="mb-6">
                 <h2 className="text-xl font-semibold text-gray-800 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  Preview Learning Path
+                  Preview Your Learning Path
                 </h2>
-                <p className="text-sm text-gray-500 mt-1 ml-8">Review your learning path before creating it</p>
+                <p className="text-sm text-gray-500 mt-1 ml-8">
+                  Review all the details of your learning path before publishing
+                </p>
               </div>
               
-              <div className="border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
-                <div className="bg-white p-6 border-b border-gray-200">
-                  <div className="flex items-start justify-between">
+              <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">{title}</h3>
+                
+                <div className="mb-4">
+                  <h4 className="text-md font-semibold text-gray-700 mb-2">Description</h4>
+                  <p className="text-gray-600">{description}</p>
+                </div>
+                
+                <div className="mb-4">
+                  <h4 className="text-md font-semibold text-gray-700 mb-2">Details</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-600">
                     <div>
-                      <h1 className="text-2xl font-bold text-gray-800 mb-2">{title || "Untitled Learning Path"}</h1>
-                      
-                      <div className="flex flex-wrap items-center gap-2 mb-4">
-                        <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getDifficultyColor(difficulty)} border`}>
-                          {difficulty}
-                        </span>
-                        <span className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 border border-blue-200">
-                          {duration} days
-                        </span>
-                        <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${isPublic ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-gray-100 text-gray-800 border border-gray-200'}`}>
-                          {isPublic ? 'Public' : 'Private'}
-                        </span>
-                      </div>
-                      
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {tags.length > 0 ? tags.map((tag, index) => (
-                          <span key={index} className="inline-block px-2.5 py-1 text-xs font-medium text-purple-800 bg-purple-100 rounded-full">
-                            #{tag}
-                          </span>
-                        )) : (
-                          <span className="text-sm text-gray-400 italic">No tags</span>
-                        )}
-                      </div>
+                      <span className="font-medium text-gray-700">Duration:</span> {duration} days
                     </div>
-                    
-                    <div className="bg-gradient-to-br from-purple-500 to-indigo-600 h-16 w-16 rounded-xl flex items-center justify-center shadow-lg">
-                      <FaGraduationCap className="text-3xl text-white" />
+                    <div>
+                      <span className="font-medium text-gray-700">Difficulty:</span> {difficulty}
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Tags:</span> {tags.length > 0 ? tags.join(', ') : 'None'}
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Public:</span> 
+                      <span className={`ml-1 px-2 py-0.5 rounded text-xs ${isPublic ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                        {isPublic ? 'Yes' : 'No'}
+                      </span>
                     </div>
                   </div>
                 </div>
                 
-                <div className="p-6">
-                  <h2 className="text-lg font-semibold text-gray-800 mb-2">Description</h2>
-                  <p className="text-gray-600 mb-6 whitespace-pre-line">{description || "No description provided."}</p>
-                  
-                  {requirements && (
-                    <>
-                      <h2 className="text-lg font-semibold text-gray-800 mb-2">Prerequisites</h2>
-                      <p className="text-gray-600 mb-6 whitespace-pre-line">{requirements}</p>
-                    </>
-                  )}
-                  
-                  {tips && (
-                    <>
-                      <h2 className="text-lg font-semibold text-gray-800 mb-2 flex items-center">
-                        <FaLightbulb className="mr-2 text-yellow-500" /> Tips for Success
-                      </h2>
-                      <p className="text-gray-600 mb-6 whitespace-pre-line">{tips}</p>
-                    </>
-                  )}
-                  
-                  <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                    </svg>
-                    Learning Path Milestones
-                  </h2>
-                  
+                <div>
+                  <h4 className="text-md font-semibold text-gray-700 mb-2">Milestones</h4>
                   <div className="space-y-4">
                     {milestones.map((milestone, index) => (
-                      <div key={index} className="border border-gray-200 rounded-lg overflow-hidden bg-white">
-                        <div className={`py-3 px-4 flex items-center border-b border-gray-200 ${
-                          index === 0 ? 'bg-purple-50' : 
-                          index % 2 === 0 ? 'bg-blue-50' : 
-                          'bg-indigo-50'
-                        }`}>
-                          <div className={`h-6 w-6 rounded-full flex items-center justify-center mr-2 text-xs font-bold ${
-                            index === 0 ? 'bg-purple-100 text-purple-600' : 
-                            index % 2 === 0 ? 'bg-blue-100 text-blue-600' : 
-                            'bg-indigo-100 text-indigo-600'
-                          }`}>
-                            {index + 1}
-                          </div>
-                          <h3 className="font-medium text-gray-800">
-                            {milestone.title || "Untitled Milestone"}
-                          </h3>
-                          <div className="ml-auto flex items-center">
-                            <span className="text-xs text-gray-500 bg-white px-2 py-0.5 rounded border border-gray-200">
-                              {milestone.estimatedDays} {milestone.estimatedDays === 1 ? 'day' : 'days'}
-                            </span>
+                      <div key={index} className="p-4 border border-gray-200 rounded-lg shadow-sm">
+                        <div className="flex justify-between items-center mb-2">
+                          <h5 className="font-medium text-gray-800">{milestone.title || `Milestone ${index + 1}`}</h5>
+                          <div className="text-xs font-semibold rounded-full" style={{ paddingLeft: '0.5rem', paddingRight: '0.5rem', paddingTop: '0.125rem', paddingBottom: '0.125rem', backgroundColor: getDifficultyColor(milestone.difficulty || difficulty), color: 'inherit' }}>
+                            {milestone.difficulty || difficulty}
                           </div>
                         </div>
-                        
-                        <div className="p-4">
-                          <p className="text-gray-600 text-sm mb-3 whitespace-pre-line">
-                            {milestone.description || "No description provided."}
-                          </p>
-                          
-                          {milestone.tips && (
-                            <div className="bg-yellow-50 border-l-4 border-yellow-200 text-yellow-800 p-3 mb-3 text-sm rounded-r">
-                              <div className="font-medium flex items-center mb-1">
-                                <FaLightbulb className="mr-1.5 text-yellow-500" /> Tip
+                        <p className="text-gray-600 mb-2">{milestone.description}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {milestone.resources && milestone.resources.length > 0 && (
+                            <div className="w-full mb-2">
+                              <span className="text-sm font-medium text-gray-700 mr-2">Resources:</span>
+                              <div className="flex flex-wrap gap-2">
+                                {milestone.resources.map((resource, resourceIndex) => (
+                                  <span key={resourceIndex} className="bg-gray-100 text-gray-800 px-3 py-1.5 rounded-full text-xs">
+                                    {resource}
+                                  </span>
+                                ))}
                               </div>
-                              <p className="whitespace-pre-line">{milestone.tips}</p>
                             </div>
                           )}
                           
-                          {milestone.resources && milestone.resources.length > 0 && (
-                            <div>
-                              <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <FaLink className="mr-1.5 text-blue-500" /> Resources
-                              </h4>
-                              <ul className="text-sm space-y-1 text-gray-600">
-                                {milestone.resources.map((resource, resourceIndex) => (
-                                  <li key={resourceIndex} className="flex items-center">
-                                    <span className="h-1.5 w-1.5 rounded-full bg-blue-400 mr-2"></span>
-                                    {resource}
-                                  </li>
-                                ))}
-                              </ul>
+                          {milestone.tips && (
+                            <div className="w-full">
+                              <span className="text-sm font-medium text-gray-700 mr-2">Tips:</span>
+                              <p className="text-gray-600 text-sm italic">{milestone.tips}</p>
                             </div>
                           )}
                         </div>
@@ -834,7 +834,7 @@ function CreateLearningPath() {
                 </div>
               </div>
               
-              <div className="flex justify-between mt-8">
+              <div className="flex justify-between">
                 <button
                   type="button"
                   onClick={() => setActiveSection('milestones')}
@@ -843,47 +843,28 @@ function CreateLearningPath() {
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
-                  Back
+                  Back to Milestones
                 </button>
                 <button
+
                   type="button"
                   onClick={handleSubmit}
                   className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg shadow hover:from-purple-700 hover:to-purple-800 transition-all hover:shadow-lg flex items-center"
                   disabled={loading}
+                  type="submit"
+                  className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg shadow hover:from-purple-700 hover:to-purple-800 transition-all flex items-center"
+
                 >
-                  {loading ? (
-                    <>
-                      <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Creating...
-                    </>
-                  ) : (
-                    <>
-                      Create Learning Path
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </>
-                  )}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12h18M12 5l7 7-7 7" />
+                  </svg>
+                  Publish Learning Path
                 </button>
               </div>
             </div>
           </form>
         </div>
       </div>
-      
-      {/* Custom styles for the toggle switch */}
-      <style jsx>{`
-        .toggle-checkbox:checked {
-          transform: translateX(100%);
-          border-color: #8b5cf6;
-        }
-        .toggle-checkbox:checked + .toggle-label {
-          background-color: #8b5cf6;
-        }
-      `}</style>
     </div>
   );
 }
