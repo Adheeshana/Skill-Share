@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../utils/AuthContext";
 import PostService from "../services/postService";
+import CommentService from "../services/commentService";
 
 function PostDetailPage() {
   const { postId } = useParams();
@@ -13,6 +14,10 @@ function PostDetailPage() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editingCommentText, setEditingCommentText] = useState("");
+  const [commentSortOrder, setCommentSortOrder] = useState("newest");
+  const [isLikeAnimating, setIsLikeAnimating] = useState(false);
 
   useEffect(() => {
     // If no postId is provided, redirect to posts listing
@@ -190,6 +195,122 @@ function PostDetailPage() {
     setShowDeleteModal(false);
     handleDeletePost();
   };
+
+  // Add a new function to handle comment editing
+  const startEditingComment = (comment) => {
+    setEditingCommentId(comment._id);
+    setEditingCommentText(comment.content);
+  };
+
+  const cancelEditingComment = () => {
+    setEditingCommentId(null);
+    setEditingCommentText("");
+  };
+
+  const saveEditedComment = async (commentId) => {
+    if (!editingCommentText.trim()) return;
+    
+    try {
+      setIsSubmitting(true);
+      
+      await CommentService.updateComment(commentId, { 
+        content: editingCommentText
+      });
+      
+      // Update the comment in the post state
+      setPost(prevPost => ({
+        ...prevPost,
+        comments: prevPost.comments.map(c => 
+          c._id === commentId 
+            ? { ...c, content: editingCommentText, updatedAt: new Date().toISOString() }
+            : c
+        )
+      }));
+      
+      // Reset editing state
+      setEditingCommentId(null);
+      setEditingCommentText("");
+    } catch (err) {
+      console.error("Failed to update comment:", err);
+      
+      // Display specific validation error messages
+      if (err.validationError) {
+        alert(err.message);
+      } else {
+        alert("Failed to update comment. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Handle like with animation
+  const handleLikeWithAnimation = async () => {
+    if (!isAuthenticated) {
+      alert("You need to login to like a post");
+      return;
+    }
+
+    // Set animation state
+    setIsLikeAnimating(true);
+    
+    try {
+      // Call the API to like/unlike the post
+      await PostService.likePost(postId);
+      
+      // Log to help debug
+      console.log("Liking post:", postId, "Current user:", currentUser);
+      
+      // Update post in the state
+      setPost(prevPost => {
+        // Ensure prevPost.likes is an array
+        const currentLikes = Array.isArray(prevPost.likes) ? [...prevPost.likes] : [];
+        const currentUserId = currentUser._id || currentUser.id;
+        
+        // Check if user has already liked the post using both possible ID formats
+        const alreadyLiked = currentLikes.some(likeId => 
+          likeId === currentUserId || 
+          likeId === currentUser._id || 
+          likeId === currentUser.id
+        );
+        
+        console.log("Like status:", {
+          postId,
+          currentLikes,
+          currentUserId,
+          alreadyLiked
+        });
+        
+        return {
+          ...prevPost,
+          likes: alreadyLiked 
+            ? currentLikes.filter(id => id !== currentUserId && id !== currentUser._id && id !== currentUser.id)
+            : [...currentLikes, currentUserId]
+        };
+      });
+    } catch (err) {
+      console.error("Failed to like post:", err);
+      alert("Failed to like post. Please try again.");
+    }
+    
+    // Reset animation after a delay
+    setTimeout(() => {
+      setIsLikeAnimating(false);
+    }, 1000);
+  };
+
+  // Sort comments based on current sort order
+  const sortedComments = post && post.comments ? [...post.comments].sort((a, b) => {
+    const dateA = new Date(a.createdAt || Date.now());
+    const dateB = new Date(b.createdAt || Date.now());
+    
+    if (commentSortOrder === "newest") {
+      return dateB - dateA;
+    } else if (commentSortOrder === "oldest") {
+      return dateA - dateB;
+    }
+    return 0;
+  }) : [];
 
   if (loading) {
     return (
@@ -397,11 +518,11 @@ function PostDetailPage() {
             <div className="post-actions d-flex justify-content-between align-items-center mt-4 pt-4 border-top">
               <div className="d-flex gap-3">
                 <button 
-                  className={`btn ${isLiked ? "btn-danger" : "btn-outline-danger"}`}
-                  onClick={handleLike}
+                  className={`btn ${isLiked ? "btn-danger" : "btn-outline-danger"} ${isLikeAnimating ? "like-btn-animate" : ""}`}
+                  onClick={handleLikeWithAnimation}
                   disabled={!isAuthenticated}
                 >
-                  <i className="bi bi-heart-fill me-1"></i>
+                  <i className={`bi bi-heart${isLiked ? "-fill" : ""} me-1`}></i>
                   {likes.length} {likes.length === 1 ? "Like" : "Likes"}
                 </button>
                 
@@ -425,16 +546,51 @@ function PostDetailPage() {
         </div>
 
         <div className="card shadow-sm border-0 mb-4">
-          <div className="card-header bg-light">
+          <div className="card-header bg-light d-flex justify-content-between align-items-center">
             <h4 className="mb-0">
               <i className="bi bi-chat-quote me-2"></i>
               Comments ({comments.length})
             </h4>
+            
+            {/* Comment sorting options */}
+            {comments.length > 1 && (
+              <div className="dropdown">
+                <button 
+                  className="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                  type="button" 
+                  id="sortDropdown" 
+                  data-bs-toggle="dropdown" 
+                  aria-expanded="false"
+                >
+                  Sort: {commentSortOrder === 'newest' ? 'Newest First' : 'Oldest First'}
+                </button>
+                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="sortDropdown">
+                  <li>
+                    <button 
+                      className={`dropdown-item ${commentSortOrder === 'newest' ? 'active' : ''}`}
+                      onClick={() => setCommentSortOrder('newest')}
+                    >
+                      <i className="bi bi-arrow-down me-2"></i>
+                      Newest First
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      className={`dropdown-item ${commentSortOrder === 'oldest' ? 'active' : ''}`}
+                      onClick={() => setCommentSortOrder('oldest')}
+                    >
+                      <i className="bi bi-arrow-up me-2"></i>
+                      Oldest First
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
           <div className="card-body">
             {isAuthenticated ? (
               <form onSubmit={handleSubmitComment} className="mb-4">
-                <div className="mb-3">
+                <div className="mb-3 position-relative">
                   <textarea
                     id="commentInput"
                     className="form-control"
@@ -443,25 +599,33 @@ function PostDetailPage() {
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     required
+                    maxLength="500"
                   ></textarea>
+                  <small className="position-absolute bottom-0 end-0 pe-2 pb-1 text-muted">
+                    {comment.length}/500
+                  </small>
                 </div>
                 <button 
                   type="submit" 
                   className="btn btn-primary"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !comment.trim()}
                 >
-                  {isSubmitting ? "Posting..." : "Post Comment"}
+                  {isSubmitting ? 
+                    <><i className="bi bi-hourglass-split me-2"></i>Posting...</> : 
+                    <><i className="bi bi-chat-text me-2"></i>Post Comment</>
+                  }
                 </button>
               </form>
             ) : (
               <div className="alert alert-info mb-4">
+                <i className="bi bi-info-circle-fill me-2"></i>
                 <Link to="/login">Login</Link> or <Link to="/register">Register</Link> to join the conversation
               </div>
             )}
 
-            {comments.length > 0 ? (
+            {sortedComments.length > 0 ? (
               <div className="comment-list">
-                {comments.map(comment => (
+                {sortedComments.map(comment => (
                   <div key={comment._id || `temp-${Date.now()}`} className="card mb-3">
                     <div className="card-body">
                       <div className="d-flex justify-content-between align-items-center mb-2">
@@ -507,15 +671,49 @@ function PostDetailPage() {
                           (currentUser.id === comment.author.id) || 
                           isAuthor
                         )) && (
-                          <button 
-                            className="btn btn-sm btn-outline-danger"
-                            onClick={() => handleDeleteComment(comment._id)}
-                          >
-                            <i className="bi bi-trash"></i>
-                          </button>
+                          <div className="d-flex gap-2">
+                            <button 
+                              className="btn btn-sm btn-outline-primary"
+                              onClick={() => startEditingComment(comment)}
+                            >
+                              <i className="bi bi-pencil"></i>
+                            </button>
+                            <button 
+                              className="btn btn-sm btn-outline-danger"
+                              onClick={() => handleDeleteComment(comment._id)}
+                            >
+                              <i className="bi bi-trash"></i>
+                            </button>
+                          </div>
                         )}
                       </div>
-                      <p className="card-text">{comment.content}</p>
+                      {editingCommentId === comment._id ? (
+                        <div>
+                          <textarea
+                            className="form-control mb-2"
+                            rows="2"
+                            value={editingCommentText}
+                            onChange={(e) => setEditingCommentText(e.target.value)}
+                          ></textarea>
+                          <div className="d-flex gap-2">
+                            <button 
+                              className="btn btn-primary btn-sm"
+                              onClick={() => saveEditedComment(comment._id)}
+                              disabled={isSubmitting}
+                            >
+                              {isSubmitting ? "Saving..." : "Save"}
+                            </button>
+                            <button 
+                              className="btn btn-secondary btn-sm"
+                              onClick={cancelEditingComment}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="card-text">{comment.content}</p>
+                      )}
                     </div>
                   </div>
                 ))}

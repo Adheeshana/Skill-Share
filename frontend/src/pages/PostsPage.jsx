@@ -94,23 +94,51 @@ function PostsPage() {
     }
 
     try {
+      // Call the API to like/unlike the post
       await PostService.likePost(postId);
+      
+      // Log to help debug
+      console.log("Liking post:", postId, "Current user:", currentUser);
 
+      // Update posts state to reflect the like change immediately in UI
       setPosts(posts.map(post => {
         if (post._id === postId) {
-          const currentLikes = Array.isArray(post.likes) ? post.likes : [];
-          const alreadyLiked = currentLikes.includes(currentUser._id);
+          // Make sure likes is an array
+          const currentLikes = Array.isArray(post.likes) ? [...post.likes] : [];
+          
+          // Check if user has already liked the post using both possible ID formats
+          const currentUserId = currentUser._id || currentUser.id;
+          const alreadyLiked = currentLikes.some(likeId => 
+            likeId === currentUserId || 
+            likeId === currentUser._id || 
+            likeId === currentUser.id
+          );
+          
+          console.log("Like status:", {
+            postId,
+            currentLikes,
+            currentUserId,
+            alreadyLiked
+          });
+          
+          // Toggle like status
           return {
             ...post,
             likes: alreadyLiked 
-              ? currentLikes.filter(id => id !== currentUser._id)
-              : [...currentLikes, currentUser._id]
+              ? currentLikes.filter(id => id !== currentUserId && id !== currentUser._id && id !== currentUser.id)
+              : [...currentLikes, currentUserId]
           };
         }
         return post;
       }));
+      
+      // Fetch posts after a short delay to ensure backend is updated
+      setTimeout(() => {
+        fetchPosts();
+      }, 500);
     } catch (err) {
       console.error("Failed to like post:", err);
+      alert("Failed to like post. Please try again.");
     }
   };
 
